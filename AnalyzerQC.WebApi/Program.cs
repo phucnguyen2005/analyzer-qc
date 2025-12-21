@@ -1,3 +1,6 @@
+using AnalyzerQC.WebApi.Database;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,8 +11,14 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); // Required for Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" } );
 });
+
+builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+{
+    optionsBuilder.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 var app = builder.Build();
 
 

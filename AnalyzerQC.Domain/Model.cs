@@ -11,8 +11,11 @@ public class Model
 
     public static int Count = 1;
     public int Id { get; private set; }
+    public int ModelGroupId { get; private set; }
+    public ModelGroup ModelGroup { get; private set; }
     public string ModelCode { get; private set; }
     public string ModelName { get; private set; }
+    public List<Analyzer> Analyzers { get; private set; }
 
     public Model(int id, string modelCode, string modelName)
     {

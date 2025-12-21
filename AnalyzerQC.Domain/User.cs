@@ -1,4 +1,6 @@
-﻿namespace AnalyzerQC;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AnalyzerQC;
 
 public class User
 {
@@ -6,6 +8,7 @@ public class User
     public const int MaxUserNameLength = 20;
     public const string InvalidUsernameError = "Invalid username";
     
+    [Key]
     public int Id { get; private set; }
     public string Username { get; private set; }
 

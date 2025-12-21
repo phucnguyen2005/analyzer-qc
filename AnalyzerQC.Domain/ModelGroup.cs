@@ -11,6 +11,7 @@ public class ModelGroup
     public int Id { get; private set; }
     public string ModelGroupName { get; private set; }
     public string ModelGroupCode { get; private set; }
+    public List<Model> Models { get; private set; }
 
     public ModelGroup(int id, string modelGroupName, string modelGroupCode)
     {

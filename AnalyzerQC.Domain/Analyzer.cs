@@ -5,10 +5,15 @@ public class Analyzer
     private static int Count = 1;
     public int Id {get; private set;}
     public int ModelId { get; set; }
-    public Model Model {get ; private set;}
-    public Site AssignedSite { get; private set; }
+    public Model Model {get ;  set;}
+    
+    public int SiteId{get ;  set;}
+    public Site AssignedSite { get;  set; }
     public string SerialNumber{get ;  set;}
     public bool Status{get ;  set;}
+    
+    
+    
 
     public Analyzer(){ }
     
