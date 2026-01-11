@@ -1,5 +1,7 @@
-﻿using AnalyzerQC.WebApi.Dtos;
+﻿using AnalyzerQC.WebApi.Database;
+using AnalyzerQC.WebApi.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.WebApi.Controllers;
 
@@ -7,45 +9,47 @@ namespace AnalyzerQC.WebApi.Controllers;
 [Route("analyzers")]
 public class AnalyzerController : ControllerBase
 {
-    [HttpGet]
-    public List<Analyzer> GetAnalyzers([FromQuery] string? sitecode)
+    private readonly AppDbContext _dbContext;
+
+    public AnalyzerController(AppDbContext dbContext)
     {
-        var data = Repositories.Analyzers;
+        _dbContext = dbContext;
+    }
+
+    [HttpGet]
+    public async Task<List<Analyzer>> GetAnalyzers([FromQuery] string? sitecode)
+    {
+        DbSet<Analyzer> data = _dbContext.Analyzers;
 
         if (!string.IsNullOrEmpty(sitecode))
         {
-            data = data.Where(analyzer => analyzer.AssignedSite.SiteCode == sitecode).ToList();
+            return await data.Where(analyzer => analyzer.AssignedSite.SiteCode == sitecode).ToListAsync();
         }
 
-        return data;
+        return await data.ToListAsync();
     }
 
-    /*
-    [HttpGet]
-    public List<Analyzer> GetAnalyzer()
-    {
-        return Repositories.Analyzers;
-    }
-*/
+
     [HttpGet]
     [Route("{id}")]
-    public Analyzer? GetAnalyzerById(int id)
+    public async Task<Analyzer?> GetAnalyzerById(Guid id)
     {
-        
-        return Repositories.Analyzers.Where(analyzer => analyzer.Id == id).SingleOrDefault();
+        var data = _dbContext.Analyzers;
+        return await data.SingleOrDefaultAsync(analyzer => analyzer.Id == id);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteAnalyzer(int id)
+    public IActionResult DeleteAnalyzer(Guid id)
     {
-        var analyzer = Repositories.Analyzers.Where(analyzer => analyzer.Id == id).SingleOrDefault();
+        var analyzer = _dbContext.Analyzers.SingleOrDefault(analyzer => analyzer.Id == id);
+        
         if (analyzer == null)
         {
             return Ok("Analyzer not found");
         }
 
-        Repositories.Analyzers.Remove(analyzer);
+        _dbContext.Analyzers.Remove(analyzer);
         return Ok();
     }
 
@@ -53,17 +57,17 @@ public class AnalyzerController : ControllerBase
     [HttpPost] // HTTP POST
     public IActionResult AddAnalyzer([FromBody] CreateAnalyzerDto analyzer)
     {
-        var model = Repositories.Models.FirstOrDefault(m => m.ModelCode == analyzer.ModelCode); // LINQ
+        var model = _dbContext.Models.FirstOrDefault(m => m.ModelCode == analyzer.ModelCode); // LINQ
         if (model == null) return NotFound("ModelCode not found");
 
         // kiem tra site
 
 
-        var site = Repositories.Sites.FirstOrDefault(s => s.SiteCode == analyzer.SiteCode);
+        var site = _dbContext.Sites.FirstOrDefault(s => s.SiteCode == analyzer.SiteCode);
         if (site == null) return NotFound("SiteCode not found");
 
         var newAnalyzer = new Analyzer(model, site, analyzer.SerialNumber, analyzer.Status);
-        Repositories.Analyzers.Add(newAnalyzer);
+        _dbContext.Analyzers.Add(newAnalyzer);
 
         return Ok();
         // return 200 OK
@@ -73,21 +77,14 @@ public class AnalyzerController : ControllerBase
     }
 
     [HttpPut]
-   
-    public IActionResult UpdateAnalyzer([FromBody] UpdateAnalyzerDto analyzer)
+    public async Task<IActionResult> UpdateAnalyzer([FromBody] UpdateAnalyzerDto analyzer)
     {
-        var existingAnalyzer = Repositories.Analyzers
-            .FirstOrDefault(a => a.Id == analyzer.Id);
-        
-        var model = Repositories.Models.FirstOrDefault(m => m.ModelCode == analyzer.ModelCode); // LINQ
-        if (model == null) return NotFound("ModelCode not found");
-
-        var site = Repositories.Sites.FirstOrDefault(s => s.SiteCode == analyzer.SiteCode);
-        if (site == null) return NotFound("SiteCode not found");
-
+        var existingAnalyzer = await _dbContext.Analyzers
+            .FirstOrDefaultAsync(a => a.Id == analyzer.Id);
+        if (existingAnalyzer == null) return NotFound("Id not found");
         existingAnalyzer.Status = analyzer.Status;
         existingAnalyzer.SerialNumber = analyzer.SerialNumber;
-        
+
         return Ok();
     }
 }

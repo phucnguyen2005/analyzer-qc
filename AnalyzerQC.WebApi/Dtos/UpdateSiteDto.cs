@@ -4,7 +4,7 @@ namespace AnalyzerQC.WebApi.Dtos;
 
 public class UpdateSiteDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     [Required]
     [Range(8, 100, ErrorMessage = "Site name length is between 8 and 100")]

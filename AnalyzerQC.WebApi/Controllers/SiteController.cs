@@ -1,4 +1,7 @@
-﻿using AnalyzerQC.WebApi.Dtos;
+﻿using AnalyzerQC.WebApi.Database;
+using AnalyzerQC.WebApi.Dtos;
+using AnalyzerQC.WebApi.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnalyzerQC.WebApi.Controllers;
@@ -9,17 +12,24 @@ using AnalyzerQC;
 [Route("[controller]")]
 public class SiteController : ControllerBase
 {
+    private readonly AppDbContext _dbContext;
+
+    public SiteController(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+    [Authorize]
     [HttpGet]
     public List<Site> GetSiteBySiteCode([FromQuery] string? sitecode)
     {
-        var data = Repositories.Sites;
+        var data = _dbContext.Sites;
 
         if (!string.IsNullOrEmpty(sitecode))
         {
-            data = data.Where(site => site.SiteCode == sitecode).ToList();
+            return data.Where(site => site.SiteCode == sitecode).ToList();
         }
 
-        return data;
+        return data.ToList();
     }
 
 
@@ -27,21 +37,21 @@ public class SiteController : ControllerBase
     [Route("{sitecode}")]
     public IActionResult DeleteSite(string sitecode)
     {
-        var site = Repositories.Sites.SingleOrDefault(site => site.SiteCode == sitecode);
+        var site = _dbContext.Sites.SingleOrDefault(site => site.SiteCode == sitecode);
         if (site == null)
         {
             return Ok("Site not found");
         }
 
-        Repositories.Sites.Remove(site);
+        _dbContext.Sites.Remove(site);
         return Ok();
     }
 
-
+    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
     [HttpPost] // HTTP POST
     public IActionResult AddSite([FromBody] CreateSiteDto site)
     {
-        Repositories.Sites.Add(new Site(site.SiteName, site.SiteCode, site.Address, site.TimeZone, site.IsActive));
+        _dbContext.Sites.Add(new Site(site.SiteName, site.SiteCode, site.Address, site.TimeZone, site.IsActive));
 
         return Ok();
         // return 200 OK
@@ -53,14 +63,9 @@ public class SiteController : ControllerBase
     [HttpPut]
     public IActionResult UpdateAnalyzer([FromBody] UpdateSiteDto site)
     {
-        var siteName = Repositories.Sites.FirstOrDefault(m => m.SiteName == site.SiteName); // LINQ
-        if (siteName == null) return NotFound("SiteName not found");
+        var existingSite = _dbContext.Sites.FirstOrDefault(s => s.Id == site.Id);
+        if (existingSite == null) return NotFound("Id not found");
 
-        var siteCode = Repositories.Sites.FirstOrDefault(s => s.SiteCode == site.SiteCode);
-        if (siteCode == null) return NotFound("SiteCode not found");
-
-
-        var existingSite = Repositories.Sites.Where(s => s.Id == site.Id ).FirstOrDefault();
 
         existingSite.IsActive = site.IsActive;
 

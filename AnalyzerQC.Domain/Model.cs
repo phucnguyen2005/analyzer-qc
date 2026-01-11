@@ -9,7 +9,7 @@ public class Model
     public const string ModelCodeLengthError = "Model code length is not valid";
 
 
-    public static int Count = 1;
+
     public int Id { get; private set; }
     public int ModelGroupId { get; private set; }
     public ModelGroup ModelGroup { get; private set; }
@@ -17,7 +17,7 @@ public class Model
     public string ModelName { get; private set; }
     public List<Analyzer> Analyzers { get; private set; }
 
-    public Model(int id, string modelCode, string modelName)
+    public Model(string modelCode, string modelName)
     {
         if (modelCode.Length != ModelCodeLength)
         {
@@ -28,8 +28,7 @@ public class Model
         {
             throw new ArgumentException(ModelNameLengthError);
         }
-
-        Id = Count++;
+        
         ModelCode = modelCode;
         ModelName = modelName;
     }

@@ -4,3 +4,13 @@ GET {{AnalyzerQC.WebApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+
+# curl -X 'GET' 
+#  'https://localhost:7214/Site' 
+#  -H 'accept: text/plain'
+GET https://localhost:7214/Site
+accept: text/plain
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZXYiLCJqdGkiOiJhZjU5YTMzNi0xMjBkLTRkNWYtOWQzZS03YjM1Y2EyMGFmMTgiLCJuYmYiOjE3Njc4NzkyNjQsImV4cCI6MTc2Nzg4MDE2NCwiaWF0IjoxNzY3ODc5MjY0fQ.lO4cgFcTOpQz6oHYCvW6GGa4VWyIz6TNFKujdopsP2E
+
+###

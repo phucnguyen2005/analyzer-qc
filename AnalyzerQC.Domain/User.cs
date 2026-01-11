@@ -8,18 +8,16 @@ public class User
     public const int MaxUserNameLength = 20;
     public const string InvalidUsernameError = "Invalid username";
     
-    [Key]
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
     public string Username { get; private set; }
 
-    public User(int id, string username)
+    public User(string username)
     {
         if (username.Length < MinUserNameLength || username.Length > MaxUserNameLength)
         {
             throw new Exception(InvalidUsernameError);
         }
-       
-        Id = id;
+        
         Username = username;
     }
 }

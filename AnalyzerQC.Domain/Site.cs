@@ -2,7 +2,6 @@
 
 public class Site
 {
-    public static int Count = 1;
     public const string SiteNameLengthError = "Site name length is not valid";
     public const string SiteCodeLengthError = "Site code length is not valid";
     public const string SiteFullError = "Site full";
@@ -12,7 +11,7 @@ public class Site
     public const int MaxAnalyzer = 10;
     
     
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
     public string SiteName { get; private set; }
     public string SiteCode { get; private set; }
     public string Address { get; private set; } 
@@ -20,10 +19,9 @@ public class Site
     public bool IsActive { get; set; }
     public List<Analyzer> Analyzers { get; private set; }
 
-    public Site(){}
+    private Site(){}    //for efcore
     public Site(string siteName, string siteCode, string address, string timeZone, bool isActive)
     {
-        Id = Count++;
         if (siteCode.Length != SiteCodeLength)
         {
             throw new ArgumentException(SiteCodeLengthError);

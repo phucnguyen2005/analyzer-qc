@@ -4,7 +4,7 @@ namespace AnalyzerQC.WebApi.Dtos;
 
 public class UpdateAnalyzerDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     [Required]
     [StringLength(8, ErrorMessage = "Model code must be 8 characters")]

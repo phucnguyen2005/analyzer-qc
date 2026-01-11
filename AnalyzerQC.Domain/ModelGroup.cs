@@ -13,7 +13,7 @@ public class ModelGroup
     public string ModelGroupCode { get; private set; }
     public List<Model> Models { get; private set; }
 
-    public ModelGroup(int id, string modelGroupName, string modelGroupCode)
+    public ModelGroup(string modelGroupName, string modelGroupCode)
     {
         if (modelGroupCode.Length != ModelGroupCodeLength)
         {
@@ -24,8 +24,7 @@ public class ModelGroup
         {
             throw new ArgumentException(ModelGroupNameLengthError);
         }
-
-        Id = id;
+        
         ModelGroupName = modelGroupName;
         ModelGroupCode = modelGroupCode;
     }
