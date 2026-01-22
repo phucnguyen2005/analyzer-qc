@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AnalyzerQC.Commons;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.WebApi.Database;
 
@@ -72,7 +73,27 @@ public class AppDbContext : DbContext
             .HasMany(e => e.Analyzers)
             .WithOne(e => e.AssignedSite)
             .HasForeignKey(e => e.SiteId);
-
+        
+        modelBuilder.Entity<Site>()
+            .Property(s => s.WorkingTime)
+            .HasColumnName(nameof(Site.WorkingTime).ToSnakeCase())
+            .IsRequired();
+        modelBuilder.Entity<Site>()
+            .Property(s => s.Frequency)
+            .HasColumnName(nameof(Site.Frequency).ToSnakeCase())
+            .IsRequired();
+        modelBuilder.Entity<Site>()
+            .Property(s => s.NotificationType)
+            .HasColumnName(nameof(Site.NotificationType).ToSnakeCase())
+            .IsRequired();
+        modelBuilder.Entity<Site>()
+            .Property(p => p.WorkingDays)
+            .HasColumnName(nameof(Site.WorkingDays).ToSnakeCase())
+            .IsRequired()
+            .HasConversion(
+                workingDays => string.Join(',', workingDays),
+                str => str.Split(',', StringSplitOptions.None).Select(x => Enum.Parse<WorkingDays>(x)).ToList()
+            );
 
         modelBuilder.Entity<Analyzer>()
             .ToTable(nameof(Analyzer).ToSnakeCase());

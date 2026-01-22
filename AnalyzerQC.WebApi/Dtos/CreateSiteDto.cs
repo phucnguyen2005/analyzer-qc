@@ -5,7 +5,7 @@ namespace AnalyzerQC.WebApi.Dtos;
 public class CreateSiteDto
 {
     [Required]
-    [Range(8, 100,  ErrorMessage = "Site name length is between 8 and 100")]
+    [StringLength(100, MinimumLength = 8, ErrorMessage = "Site name length is between 8 and 100")]
     public string SiteName { get; set; } = null!;
     
     [Required]

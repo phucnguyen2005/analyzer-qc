@@ -1,4 +1,6 @@
-﻿namespace AnalyzerQC;
+﻿using AnalyzerQC.Commons;
+
+namespace AnalyzerQC;
 
 public class Site
 {
@@ -18,6 +20,12 @@ public class Site
     public string TimeZone { get; private set; } = null!;
     public bool IsActive { get; set; }
     public List<Analyzer> Analyzers { get; private set; }
+    public string WorkingTime { get; private set; }
+    public float Frequency {get; private set;}
+    public NotificationTypes NotificationType {get; private set;}
+
+    
+    public List<WorkingDays> WorkingDays {get; private set;}
 
     private Site(){}    //for efcore
     public Site(string siteName, string siteCode, string address, string timeZone, bool isActive)
@@ -31,6 +39,15 @@ public class Site
         SiteCode = siteCode;
         IsActive = isActive;
         Analyzers = [];
+        //Default settings for sites
+        Frequency = 8;
+        WorkingDays =
+        [
+            Commons.WorkingDays.Monday, Commons.WorkingDays.Tuesday, Commons.WorkingDays.Wednesday,
+            Commons.WorkingDays.Thursday, Commons.WorkingDays.Friday
+        ];
+        NotificationType = NotificationTypes.Email;
+        WorkingTime = "08:00";
     }
 
     public void Update(string siteName, string address, string timeZone)
@@ -55,4 +72,6 @@ public class Site
         
         Analyzers.Add(analyzer);
     }
+    
+    
 }

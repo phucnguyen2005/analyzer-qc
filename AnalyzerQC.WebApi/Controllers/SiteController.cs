@@ -3,6 +3,7 @@ using AnalyzerQC.WebApi.Dtos;
 using AnalyzerQC.WebApi.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.WebApi.Controllers;
 
@@ -18,7 +19,7 @@ public class SiteController : ControllerBase
     {
         _dbContext = dbContext;
     }
-    [Authorize]
+    /*[Authorize]*/
     [HttpGet]
     public List<Site> GetSiteBySiteCode([FromQuery] string? sitecode)
     {
@@ -44,15 +45,16 @@ public class SiteController : ControllerBase
         }
 
         _dbContext.Sites.Remove(site);
+        _dbContext.SaveChanges();
         return Ok();
     }
 
-    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
+    /*[Authorize]*/
     [HttpPost] // HTTP POST
     public IActionResult AddSite([FromBody] CreateSiteDto site)
     {
         _dbContext.Sites.Add(new Site(site.SiteName, site.SiteCode, site.Address, site.TimeZone, site.IsActive));
-
+        _dbContext.SaveChanges();
         return Ok();
         // return 200 OK
         // return 400 Bad Request
@@ -68,7 +70,29 @@ public class SiteController : ControllerBase
 
 
         existingSite.IsActive = site.IsActive;
-
+        _dbContext.SaveChanges();
         return Ok();
     }
+    
+    [HttpGet]
+    [Route("{siteId}/sitesettings")]
+    public async Task<SiteDto?> GetSiteSettingsBySiteId([FromRoute] Guid siteId)
+    {
+        var data = await _dbContext.Sites.FirstOrDefaultAsync(s => s.Id == siteId);  
+        if(data == null) return null;
+        /*var sites = data.ToList();*/
+        //convert sites to list of dto
+        var results = new SiteDto
+        {
+            SiteCode = data.SiteCode,
+            SiteName = data.SiteName,
+            TimeZone = data.TimeZone,
+            Analyzers = _dbContext.Analyzers
+                .Where(analyzer => analyzer.SiteId == data.Id).ToList()
+        };
+        return results;
+    }
+    
+    /*[HttpPost]
+    public IActionResult */
 }

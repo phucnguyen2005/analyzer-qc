@@ -32,7 +32,7 @@ public class AnalyzerController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<Analyzer?> GetAnalyzerById(Guid id)
+    public async Task<Analyzer?> GetAnalyzerById([FromRoute] Guid id)
     {
         var data = _dbContext.Analyzers;
         return await data.SingleOrDefaultAsync(analyzer => analyzer.Id == id);

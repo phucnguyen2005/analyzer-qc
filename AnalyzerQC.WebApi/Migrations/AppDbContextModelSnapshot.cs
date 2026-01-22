@@ -120,9 +120,17 @@ namespace AnalyzerQC.WebApi.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("address");
 
+                    b.Property<float>("Frequency")
+                        .HasColumnType("float")
+                        .HasColumnName("frequency");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_active");
+
+                    b.Property<int>("NotificationType")
+                        .HasColumnType("int")
+                        .HasColumnName("notification_type");
 
                     b.Property<string>("SiteCode")
                         .IsRequired()
@@ -139,6 +147,16 @@ namespace AnalyzerQC.WebApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("time_zone");
+
+                    b.Property<string>("WorkingDays")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("working_days");
+
+                    b.Property<string>("WorkingTime")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("working_time");
 
                     b.HasKey("Id");
 

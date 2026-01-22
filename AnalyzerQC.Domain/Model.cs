@@ -17,7 +17,7 @@ public class Model
     public string ModelName { get; private set; }
     public List<Analyzer> Analyzers { get; private set; }
 
-    public Model(string modelCode, string modelName)
+    public Model(string modelCode, string modelName, int modelGroupId)
     {
         if (modelCode.Length != ModelCodeLength)
         {
@@ -31,5 +31,6 @@ public class Model
         
         ModelCode = modelCode;
         ModelName = modelName;
+        ModelGroupId =  modelGroupId;
     }
 }
