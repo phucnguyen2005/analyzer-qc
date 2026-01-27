@@ -92,7 +92,8 @@ public class AppDbContext : DbContext
             .IsRequired()
             .HasConversion(
                 workingDays => string.Join(',', workingDays),
-                str => str.Split(',', StringSplitOptions.None).Select(x => Enum.Parse<WorkingDays>(x)).ToList()
+                str => str.Split(',', StringSplitOptions.None)
+                    .Select(x => Enum.Parse<WorkingDays>(x)).ToList()
             );
 
         modelBuilder.Entity<Analyzer>()

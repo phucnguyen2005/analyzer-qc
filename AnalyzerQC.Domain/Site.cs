@@ -15,17 +15,17 @@ public class Site
     
     public Guid Id { get; private set; }
     public string SiteName { get; private set; }
-    public string SiteCode { get; private set; }
+    public string SiteCode { get; set; }
     public string Address { get; private set; } 
     public string TimeZone { get; private set; } = null!;
     public bool IsActive { get; set; }
     public List<Analyzer> Analyzers { get; private set; }
-    public string WorkingTime { get; private set; }
-    public float Frequency {get; private set;}
-    public NotificationTypes NotificationType {get; private set;}
+    public string WorkingTime { get; set; }
+    public float Frequency {get;  set;}
+    public NotificationTypes NotificationType {get; set;}
 
     
-    public List<WorkingDays> WorkingDays {get; private set;}
+    public List<WorkingDays> WorkingDays {get;  set;}
 
     private Site(){}    //for efcore
     public Site(string siteName, string siteCode, string address, string timeZone, bool isActive)

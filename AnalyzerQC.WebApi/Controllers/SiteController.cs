@@ -21,16 +21,25 @@ public class SiteController : ControllerBase
     }
     /*[Authorize]*/
     [HttpGet]
-    public List<Site> GetSiteBySiteCode([FromQuery] string? sitecode)
+    public List<SiteDto> GetSitesBySiteCode([FromQuery] string? sitecode)
     {
-        var data = _dbContext.Sites;
-
-        if (!string.IsNullOrEmpty(sitecode))
+        var data = _dbContext.Sites.AsQueryable()
+            .Include(site => site.Analyzers)
+            .ThenInclude(analyzer => analyzer.Model);
+            
+        
+        return data.Select(site => new SiteDto
         {
-            return data.Where(site => site.SiteCode == sitecode).ToList();
-        }
-
-        return data.ToList();
+            SiteCode = site.SiteCode,
+            SiteName = site.SiteName,
+            TimeZone = site.TimeZone,
+            Analyzers = site.Analyzers
+                .Select(analyzer=> new AnalyzerDto()
+                {
+                    SerialNumber = analyzer.SerialNumber,
+                    ModelName = analyzer.Model.ModelName,
+                }).ToList()
+        }).ToList();
     }
 
 
@@ -76,23 +85,36 @@ public class SiteController : ControllerBase
     
     [HttpGet]
     [Route("{siteId}/sitesettings")]
-    public async Task<SiteDto?> GetSiteSettingsBySiteId([FromRoute] Guid siteId)
+    public async Task<SiteSettingsDto?> GetSiteSettingsBySiteId([FromRoute] Guid siteId)
     {
-        var data = await _dbContext.Sites.FirstOrDefaultAsync(s => s.Id == siteId);  
+        
+        var data = await _dbContext.Sites
+            .Include(site => site.Analyzers)
+            .FirstOrDefaultAsync(s => s.Id == siteId);  
         if(data == null) return null;
-        /*var sites = data.ToList();*/
-        //convert sites to list of dto
-        var results = new SiteDto
+        var results = new SiteSettingsDto
         {
-            SiteCode = data.SiteCode,
-            SiteName = data.SiteName,
-            TimeZone = data.TimeZone,
-            Analyzers = _dbContext.Analyzers
-                .Where(analyzer => analyzer.SiteId == data.Id).ToList()
+            Frequency = data.Frequency,
+            NotificationType = data.NotificationType,
+            WorkingTime = data.WorkingTime, //TODO: should display as standard
+            WorkingDays = data.WorkingDays
+           
         };
         return results;
     }
-    
-    /*[HttpPost]
-    public IActionResult */
+
+    [HttpPut]
+    [Route("{siteId}/sitesettings")]
+    public IActionResult UpdateSiteSettings([FromBody] UpdateSiteSettingsDto site)//TODO: async
+    {
+        var data = _dbContext.Sites.FirstOrDefault(s => s.Id == site.Id);
+        if (data == null) return NotFound("Id not found");
+        data.Frequency = site.frequency;
+        data.NotificationType = site.NotificationType;
+        data.WorkingDays = site.WorkingDays; 
+        data.WorkingTime = site.WorkingTime;
+        _dbContext.SaveChanges();
+        return Ok();
+        
+    }
 }

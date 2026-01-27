@@ -68,7 +68,7 @@ public class AnalyzerController : ControllerBase
 
         var newAnalyzer = new Analyzer(model, site, analyzer.SerialNumber, analyzer.Status);
         _dbContext.Analyzers.Add(newAnalyzer);
-
+        _dbContext.SaveChanges();
         return Ok();
         // return 200 OK
         // return 400 Bad Request
@@ -84,7 +84,7 @@ public class AnalyzerController : ControllerBase
         if (existingAnalyzer == null) return NotFound("Id not found");
         existingAnalyzer.Status = analyzer.Status;
         existingAnalyzer.SerialNumber = analyzer.SerialNumber;
-
+        _dbContext.SaveChanges();
         return Ok();
     }
 }
