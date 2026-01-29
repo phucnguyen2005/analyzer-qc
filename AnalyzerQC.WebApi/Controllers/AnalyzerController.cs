@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.WebApi.Controllers;
-
+//TODO: update route and apply async where applicable
 [ApiController]
 [Route("analyzers")]
 public class AnalyzerController : ControllerBase
@@ -84,7 +84,7 @@ public class AnalyzerController : ControllerBase
         if (existingAnalyzer == null) return NotFound("Id not found");
         existingAnalyzer.Status = analyzer.Status;
         existingAnalyzer.SerialNumber = analyzer.SerialNumber;
-        _dbContext.SaveChanges();
+        _dbContext.SaveChanges ();
         return Ok();
     }
 }
