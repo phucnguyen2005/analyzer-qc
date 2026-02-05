@@ -15,7 +15,7 @@ public class ModelGroup
 
     public ModelGroup(string modelGroupName, string modelGroupCode)
     {
-        if (modelGroupCode.Length != ModelGroupCodeLength)
+        if (modelGroupCode.Length > ModelGroupCodeLength)
         {
             throw new ArgumentException(ModelGroupCodeLengthError);
         }

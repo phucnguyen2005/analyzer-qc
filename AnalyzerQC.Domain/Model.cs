@@ -2,7 +2,7 @@
 
 public class Model
 {
-    public const int ModelCodeLength = 8;
+    public const int ModelCodeLength = 10;
     public const int MinModelNameLength = 8;
     public const int MaxModelNameLength = 100;
     public const string ModelNameLengthError = "Model name length is not valid";
@@ -19,7 +19,7 @@ public class Model
 
     public Model(string modelCode, string modelName, int modelGroupId)
     {
-        if (modelCode.Length != ModelCodeLength)
+        if (modelCode.Length > ModelCodeLength)
         {
             throw new ArgumentException(ModelCodeLengthError);
         }

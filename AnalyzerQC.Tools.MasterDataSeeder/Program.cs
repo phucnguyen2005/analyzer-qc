@@ -1,6 +1,8 @@
 using AnalyzerQC;
 using AnalyzerQC.WebApi.Database;
 using AnalyzerQC.WebApi.Dtos;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,26 +10,49 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+builder.Services.AddSwaggerGen(c =>
 {
-    app.MapOpenApi();
-}
+    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
 
+
+    // Define the security scheme (e.g., Bearer Authentication)
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
+builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+{
+    optionsBuilder.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+var app = builder.Build();
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/seed-groups-and-models",async (AppDbContext dbContext) =>
+app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
     {
-        
-        //todo: doc file csv
         List<ModelGroupCsvDto> modelGroupDtos = [];
+        using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\model-groups.csv"))
+        {
+            var headerLine = sr.ReadLine(); // read and ignore header
+            while (sr.ReadLine() is { } line)
+            {
+                
+                var values = line.Split(',');
+                modelGroupDtos.Add(new ModelGroupCsvDto(int.Parse(values[0]), values[1], values[2]));
+            }
+        }
+        //todo: doc file csv
 
         // parse entity
         var modelGroupEntities = modelGroupDtos
@@ -35,9 +60,24 @@ app.MapGet("/seed-groups-and-models",async (AppDbContext dbContext) =>
                 x.ModelGroupName,
                 x.ModelGroupCode))
             .ToList();
-
+        await dbContext.ModelGroups.AddRangeAsync(modelGroupEntities);
+        await dbContext.SaveChangesAsync();
         //todo: doc file csv 2 
         List<ModelCsvDto> modelDtos = [];
+        using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\models.csv"))
+        {
+            var headerLine = sr.ReadLine(); // read and ignore header
+            while (sr.ReadLine() is { } line)
+            {
+                var values = line.Split(',');
+                modelDtos.Add(new ModelCsvDto(
+                               int.Parse(values[0]),
+                        values[1],
+                        values[2], 
+                    values[3], 
+                      int.Parse(values[4])));
+            }
+        }
 
         // parse entity
         var modelEntities = modelDtos
@@ -56,18 +96,21 @@ app.MapGet("/seed-groups-and-models",async (AppDbContext dbContext) =>
             .ToList();
 
         // call db context and add to db 
-        await dbContext.ModelGroups.AddRangeAsync(modelGroupEntities); // TODO: async please
+        
         await dbContext.Models.AddRangeAsync(modelEntities);
 
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return "Ok";
     })
     .WithName("Seed master data - Model groups and models");
 
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+if (app.Environment.IsDevelopment())
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    app.MapOpenApi();
+
+    app.UseSwagger();
+    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 }
+
+app.Run();
