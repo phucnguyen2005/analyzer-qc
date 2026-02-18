@@ -1,5 +1,5 @@
-﻿using AnalyzerQC.WebApi.Database;
-using AnalyzerQC.WebApi.Dtos;
+﻿using AnalyzerQC.Application;
+using AnalyzerQC.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnalyzerQC.WebApi.Controllers;
@@ -7,37 +7,30 @@ namespace AnalyzerQC.WebApi.Controllers;
 [Route("[controller]")]
 public class ModelGroupController : ControllerBase
 {
-    private readonly AppDbContext _dbContext;
-    public ModelGroupController(AppDbContext dbContext)
+    private readonly IModelGroupService _modelGroupService;
+    public ModelGroupController(IModelGroupService modelGroupService)
     {
-        _dbContext = dbContext;
+        _modelGroupService = modelGroupService;
     }
     [HttpGet] // http methods
-    public List<ModelGroup> GetModelGroup([FromQuery] string? modelGroupCode) // method of ModelController
+    public async Task<List<ModelGroup>> GetModelGroup([FromQuery] string? modelGroupCode) // method of ModelController
     {
-        var data = _dbContext.ModelGroups;
-
-        if (!string.IsNullOrEmpty(modelGroupCode))
-        {
-            return data.Where(modelGroup => modelGroup.ModelGroupCode==modelGroupCode).ToList();
-        }
-
-        return data.ToList();
+        return await _modelGroupService.GetModelGroup(modelGroupCode);
+        
     }
-
+    
     [HttpGet]
     [Route("{id}")]
-    public ModelGroup? GetModelGroupById(int id)
+    public async Task<ModelGroup?> GetModelGroupById(int id)
     {
-        var modelGroup=_dbContext.ModelGroups.FirstOrDefault(model => model.Id==id);
-        return modelGroup;
+        return await _modelGroupService.GetModelGroupById(id);
     }
 
     [HttpPost]
-    public IActionResult AddModelGroup([FromBody] CreateModelGroupDto modelGroup)
+    public async Task<IActionResult> AddModelGroup([FromBody] CreateModelGroupDto modelGroup)
     {
-        _dbContext.ModelGroups.Add(new ModelGroup(modelGroup.ModelGroupCode, modelGroup.ModelGroupName));
-        _dbContext.SaveChanges();
+        var result = await _modelGroupService.AddModelGroup(modelGroup);
+        if (!result) return BadRequest("Failed to add model group");
         return Ok();
     }
 }

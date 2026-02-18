@@ -1,6 +1,5 @@
-﻿using AnalyzerQC.WebApi.Database;
-using AnalyzerQC.WebApi.Dtos;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AnalyzerQC.Application;
+using AnalyzerQC.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnalyzerQC.WebApi.Controllers;
@@ -10,39 +9,29 @@ namespace AnalyzerQC.WebApi.Controllers;
 public class ModelController : ControllerBase
 {
     
-    private readonly AppDbContext _dbContext;
-    public ModelController(AppDbContext dbContext)
+    private readonly IModelService _modelService;
+    public ModelController(IModelService modelService)
     {
-        _dbContext = dbContext;
+        _modelService = modelService;
     }
     [HttpGet] // http methods
-    public List<Model> GetModel([FromQuery] string? modelCode) // method of ModelController
+    public async Task<List<Model>> GetModel([FromQuery] string? modelCode) // method of ModelController
     {
-        var data = _dbContext.Models;
-
-        if (!string.IsNullOrEmpty(modelCode))
-        {
-            return data.Where(model => model.ModelCode==modelCode).ToList();
-        }
-
-        return data.ToList();
+        return await _modelService.GetModel(modelCode);
     }
 
     [HttpGet]
     [Route("{id}")]
-    public Model? GetModelById(int id)
+    public async Task<Model?> GetModelById(int id)
     {
-        var model=_dbContext.Models.FirstOrDefault(model => model.Id==id);
-        return model;
+        return await _modelService.GetModelById(id);
     }
 
     [HttpPost]
-    public IActionResult AddModel([FromBody] CreateModelDto model)
+    public async Task<IActionResult> AddModel([FromBody] CreateModelDto model)
     {
-        var modelGroup = _dbContext.ModelGroups.FirstOrDefault(m => m.Id == model.ModelGroupId); // LINQ
-        if (modelGroup == null) return NotFound("ModelGroupCode not found");
-        _dbContext.Models.Add(new Model(model.ModelCode, model.ModelName, modelGroup.Id));
-        _dbContext.SaveChanges();
+        var result = await _modelService.AddModel(model);
+        if (!result) return BadRequest("Failed to add model");
         return Ok();
     }
 }

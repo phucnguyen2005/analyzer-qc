@@ -11,7 +11,7 @@ public class ModelGroup
     public int Id { get; private set; }
     public string ModelGroupName { get; private set; }
     public string ModelGroupCode { get; private set; }
-    public List<Model> Models { get; private set; }
+    public List<Model> Models { get; private set; } = [];//navigation property
 
     public ModelGroup(string modelGroupName, string modelGroupCode)
     {
@@ -27,5 +27,9 @@ public class ModelGroup
         
         ModelGroupName = modelGroupName;
         ModelGroupCode = modelGroupCode;
+    }
+    public void AddModel(Model model)
+    {
+        Models.Add(model);
     }
 }

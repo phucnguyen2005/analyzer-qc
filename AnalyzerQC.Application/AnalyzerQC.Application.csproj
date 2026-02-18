@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,21 +14,15 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.0.1"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.1"/>
-       
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\AnalyzerQC.Application\AnalyzerQC.Application.csproj" />
-        <ProjectReference Include="..\AnalyzerQC.Domain\AnalyzerQC.Domain.csproj" />
-        <ProjectReference Include="..\AnalyzerQC.Infrastructure\AnalyzerQC.Infrastructure.csproj" />
+      <ProjectReference Include="..\AnalyzerQC.Domain\AnalyzerQC.Domain.csproj" />
+      
     </ItemGroup>
     
-
 </Project>

@@ -1,5 +1,7 @@
 using System.Text;
-using AnalyzerQC.WebApi.Database;
+using AnalyzerQC.Application;
+using AnalyzerQC.Infrastructure.Database;
+
 using AnalyzerQC.WebApi.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -91,10 +93,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddScoped<IAnalyzerService, AnalyzerService>();
+builder.Services.AddScoped<IModelGroupService, ModelGroupService>();
+builder.Services.AddScoped<IModelService, ModelService>();
+builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 {
     optionsBuilder.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 
 var app = builder.Build();
 

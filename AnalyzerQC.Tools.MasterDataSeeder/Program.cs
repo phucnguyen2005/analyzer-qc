@@ -1,6 +1,6 @@
 using AnalyzerQC;
-using AnalyzerQC.WebApi.Database;
-using AnalyzerQC.WebApi.Dtos;
+using AnalyzerQC.Application.Dtos;
+using AnalyzerQC.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -41,6 +41,7 @@ app.UseHttpsRedirection();
 
 app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
     {
+        
         List<ModelGroupCsvDto> modelGroupDtos = [];
         using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\model-groups.csv"))
         {
@@ -52,7 +53,7 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
                 modelGroupDtos.Add(new ModelGroupCsvDto(int.Parse(values[0]), values[1], values[2]));
             }
         }
-        //todo: doc file csv
+        
 
         // parse entity
         var modelGroupEntities = modelGroupDtos
@@ -60,9 +61,9 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
                 x.ModelGroupName,
                 x.ModelGroupCode))
             .ToList();
-        await dbContext.ModelGroups.AddRangeAsync(modelGroupEntities);
-        await dbContext.SaveChangesAsync();
-        //todo: doc file csv 2 
+        
+        
+       
         List<ModelCsvDto> modelDtos = [];
         using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\models.csv"))
         {
@@ -79,26 +80,39 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
             }
         }
 
+
+        for (int i = 0; i < modelDtos.Count; i++)
+        {
+            var a = modelDtos[i];
+            var mg = modelGroupEntities
+                .FirstOrDefault(m => m.ModelGroupCode == a.ModelGroupCode);
+            if (mg == null) throw new Exception("Model group code not found");
+            var modelEntity = new Model(
+                a.ModelCode,
+                a.ModelName,
+                mg.Id);
+            mg.AddModel(modelEntity);
+        }
         // parse entity
-        var modelEntities = modelDtos
+        /*var modelEntities = modelDtos
             //string modelCode, string modelName, int modelGroupId
             .Select(x =>
             {
                 var mg = modelGroupEntities
                     .FirstOrDefault(m => m.ModelGroupCode == x.ModelGroupCode);
-                // todo: what if the mg null
+                
                 if (mg == null) throw new Exception("Model group code not found");
                 return new Model(
                     x.ModelCode,
                     x.ModelName,
-                    mg.Id); //todo: Id will be null for sure
+                    mg.Id); 
             })
-            .ToList();
+            .ToList();*/
 
         // call db context and add to db 
         
-        await dbContext.Models.AddRangeAsync(modelEntities);
-
+        
+        await dbContext.ModelGroups.AddRangeAsync(modelGroupEntities);
         await dbContext.SaveChangesAsync();
 
         return "Ok";

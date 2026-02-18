@@ -1,9 +1,10 @@
-﻿using AnalyzerQC.Commons;
+﻿using AnalyzerQC.Application;
+using AnalyzerQC.Commons;
 using Microsoft.EntityFrameworkCore;
 
-namespace AnalyzerQC.WebApi.Database;
+namespace AnalyzerQC.Infrastructure.Database;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IAppDbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

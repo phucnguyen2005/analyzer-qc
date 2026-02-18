@@ -8,6 +8,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F0235CA7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerQC.Tools.MasterDataSeeder", "AnalyzerQC.Tools.MasterDataSeeder\AnalyzerQC.Tools.MasterDataSeeder.csproj", "{3C2A872C-BA31-4651-9D69-2FDECED1335E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerQC.Application", "AnalyzerQC.Application\AnalyzerQC.Application.csproj", "{3B1E0931-E626-46E5-A3EA-3D709563AB28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerQC.Infrastructure", "AnalyzerQC.Infrastructure\AnalyzerQC.Infrastructure.csproj", "{08CDCBB8-E5AF-4C87-B62E-24BA5F76E235}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{3C2A872C-BA31-4651-9D69-2FDECED1335E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C2A872C-BA31-4651-9D69-2FDECED1335E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C2A872C-BA31-4651-9D69-2FDECED1335E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1E0931-E626-46E5-A3EA-3D709563AB28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1E0931-E626-46E5-A3EA-3D709563AB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1E0931-E626-46E5-A3EA-3D709563AB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1E0931-E626-46E5-A3EA-3D709563AB28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08CDCBB8-E5AF-4C87-B62E-24BA5F76E235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08CDCBB8-E5AF-4C87-B62E-24BA5F76E235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08CDCBB8-E5AF-4C87-B62E-24BA5F76E235}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08CDCBB8-E5AF-4C87-B62E-24BA5F76E235}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3C2A872C-BA31-4651-9D69-2FDECED1335E} = {F0235CA7-4D0E-4CA4-999B-6188105BF8F1}

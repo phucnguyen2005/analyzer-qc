@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AnalyzerQC.WebApi.Dtos;
+namespace AnalyzerQC.Application.Dtos;
 
 public class UpdateSiteDto
 {

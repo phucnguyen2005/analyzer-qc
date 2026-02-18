@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AnalyzerQC.Commons;
+﻿using AnalyzerQC.Commons;
 
-namespace AnalyzerQC.WebApi.Dtos;
+namespace AnalyzerQC.Application.Dtos;
 
 public class UpdateSiteSettingsDto
 {

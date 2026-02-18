@@ -1,6 +1,6 @@
 ﻿using AnalyzerQC.Commons;
 
-namespace AnalyzerQC.WebApi.Dtos;
+namespace AnalyzerQC.Application.Dtos;
 
 public class SiteSettingsDto
 {

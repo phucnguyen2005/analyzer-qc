@@ -1,5 +1,6 @@
-﻿using AnalyzerQC.WebApi.Database;
-using AnalyzerQC.WebApi.Dtos;
+﻿using AnalyzerQC.Application;
+using AnalyzerQC.Application.Dtos;
+
 using AnalyzerQC.WebApi.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,64 +8,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.WebApi.Controllers;
 
-using AnalyzerQC;
+
 
 [ApiController]
 [Route("[controller]")]
 public class SiteController : ControllerBase
 {
-    private readonly AppDbContext _dbContext;
+    private readonly ISiteService _siteService;
 
-    public SiteController(AppDbContext dbContext)
+    public SiteController(ISiteService siteService)
     {
-        _dbContext = dbContext;
+        _siteService = siteService;
     }
     /*[Authorize]*/
     [HttpGet]
-    public List<SiteDto> GetSitesBySiteCode([FromQuery] string? sitecode)
+    public async Task<List<SiteDto>> GetSitesBySiteId([FromQuery] Guid? siteId)
     {
-        var data = _dbContext.Sites.AsQueryable()
-            .Include(site => site.Analyzers)
-            .ThenInclude(analyzer => analyzer.Model);
-            
-        
-        return data.Select(site => new SiteDto
-        {
-            SiteCode = site.SiteCode,
-            SiteName = site.SiteName,
-            TimeZone = site.TimeZone,
-            Analyzers = site.Analyzers
-                .Select(analyzer=> new AnalyzerDto()
-                {
-                    SerialNumber = analyzer.SerialNumber,
-                    ModelName = analyzer.Model.ModelName,
-                }).ToList()
-        }).ToList();
+        return await _siteService.GetSitesBySiteId(siteId);
     }
 
 
     [HttpDelete]
     [Route("{sitecode}")]
-    public IActionResult DeleteSite(string sitecode)
+    public async Task<IActionResult> DeleteSite(string sitecode)
     {
-        var site = _dbContext.Sites.SingleOrDefault(site => site.SiteCode == sitecode);
-        if (site == null)
-        {
-            return Ok("Site not found");
-        }
-
-        _dbContext.Sites.Remove(site);
-        _dbContext.SaveChanges();
+        var result = await _siteService.DeleteSite(sitecode);
+        if (!result) return NotFound("Id not found");
         return Ok();
     }
 
     /*[Authorize]*/
     [HttpPost] // HTTP POST
-    public IActionResult AddSite([FromBody] CreateSiteDto site)
+    public async Task<IActionResult> AddSite([FromBody] CreateSiteDto site)
     {
-        _dbContext.Sites.Add(new Site(site.SiteName, site.SiteCode, site.Address, site.TimeZone, site.IsActive));
-        _dbContext.SaveChanges();
-        return Ok();
+        var result = await _siteService.AddSite(site);
+        if (!result) return BadRequest("Failed to add site");
+         return Ok();
         // return 200 OK
         // return 400 Bad Request
         // return 404 Not Found
@@ -72,14 +51,10 @@ public class SiteController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult UpdateAnalyzer([FromBody] UpdateSiteDto site)
+    public async Task<IActionResult> UpdateSite([FromBody] UpdateSiteDto site)
     {
-        var existingSite = _dbContext.Sites.FirstOrDefault(s => s.Id == site.Id);
-        if (existingSite == null) return NotFound("Id not found");
-
-
-        existingSite.IsActive = site.IsActive;
-        _dbContext.SaveChanges();
+        var result = await _siteService.UpdateSite(site);
+        if (!result) return BadRequest("Failed to update site");
         return Ok();
     }
     
@@ -87,34 +62,15 @@ public class SiteController : ControllerBase
     [Route("{siteId}/sitesettings")]
     public async Task<SiteSettingsDto?> GetSiteSettingsBySiteId([FromRoute] Guid siteId)
     {
-        
-        var data = await _dbContext.Sites
-            .Include(site => site.Analyzers)
-            .FirstOrDefaultAsync(s => s.Id == siteId);  
-        if(data == null) return null;
-        var results = new SiteSettingsDto
-        {
-            Frequency = data.Frequency,
-            NotificationType = data.NotificationType,
-            WorkingTime = data.WorkingTime, //TODO: should display as standard
-            WorkingDays = data.WorkingDays
-           
-        };
-        return results;
+        return await _siteService.GetSiteSettingsBySiteId(siteId);
     }
 
     [HttpPut]
     [Route("{siteId}/sitesettings")]
-    public IActionResult UpdateSiteSettings([FromBody] UpdateSiteSettingsDto site)//TODO: async
+    public async Task<IActionResult> UpdateSiteSettings([FromBody] UpdateSiteSettingsDto site)
     {
-        var data = _dbContext.Sites.FirstOrDefault(s => s.Id == site.Id);
-        if (data == null) return NotFound("Id not found");
-        data.Frequency = site.frequency;
-        data.NotificationType = site.NotificationType;
-        data.WorkingDays = site.WorkingDays; 
-        data.WorkingTime = site.WorkingTime;
-        _dbContext.SaveChanges();
+        var result = await _siteService.UpdateSiteSettings(site);
+        if (!result) return BadRequest("Failed to update site settings");
         return Ok();
-        
     }
 }

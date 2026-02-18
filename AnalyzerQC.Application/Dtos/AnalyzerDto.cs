@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace AnalyzerQC.WebApi.Dtos;
+namespace AnalyzerQC.Application.Dtos;
 
 public class AnalyzerDto
 {

@@ -1,4 +1,4 @@
-﻿namespace AnalyzerQC.WebApi.Dtos;
+﻿namespace AnalyzerQC.Application.Dtos;
 
 public class ModelGroupCsvDto
 {
