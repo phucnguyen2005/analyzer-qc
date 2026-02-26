@@ -1,13 +1,10 @@
 using System.Text;
 using AnalyzerQC.Application;
 using AnalyzerQC.Infrastructure.Database;
-
-using AnalyzerQC.WebApi.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(x =>
@@ -33,7 +30,7 @@ builder.Services.AddAuthentication(x =>
     // 1. Định nghĩa Security Scheme (Cấu hình nút Authorize nhập JWT)
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
                       Enter 'Bearer' [space] and then your token in the text input below.
                       \r\n\r\nExample: 'Bearer 12345abcdef'",
         Name = "Authorization",
@@ -86,7 +83,7 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         Scheme = "Bearer"
     });
-    
+
     c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
         [new OpenApiSecuritySchemeReference("Bearer", document)] = []
@@ -120,14 +117,5 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();
-
-namespace AnalyzerQC.WebApi
-{
-    record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-    {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-}

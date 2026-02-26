@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-namespace AnalyzerQC.Application.Dtos;
+﻿namespace AnalyzerQC.Application.Dtos;
 
 public class AnalyzerDto
 {

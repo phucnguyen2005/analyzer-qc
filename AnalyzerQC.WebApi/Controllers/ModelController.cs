@@ -5,15 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace AnalyzerQC.WebApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/models")]
 public class ModelController : ControllerBase
 {
-    
     private readonly IModelService _modelService;
+
     public ModelController(IModelService modelService)
     {
         _modelService = modelService;
     }
+
     [HttpGet] // http methods
     public async Task<List<Model>> GetModel([FromQuery] string? modelCode) // method of ModelController
     {

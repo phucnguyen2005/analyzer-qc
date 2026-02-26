@@ -41,19 +41,17 @@ app.UseHttpsRedirection();
 
 app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
     {
-        
         List<ModelGroupCsvDto> modelGroupDtos = [];
         using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\model-groups.csv"))
         {
             var headerLine = sr.ReadLine(); // read and ignore header
             while (sr.ReadLine() is { } line)
             {
-                
                 var values = line.Split(',');
                 modelGroupDtos.Add(new ModelGroupCsvDto(int.Parse(values[0]), values[1], values[2]));
             }
         }
-        
+
 
         // parse entity
         var modelGroupEntities = modelGroupDtos
@@ -61,9 +59,8 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
                 x.ModelGroupName,
                 x.ModelGroupCode))
             .ToList();
-        
-        
-       
+
+
         List<ModelCsvDto> modelDtos = [];
         using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\models.csv"))
         {
@@ -72,11 +69,11 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
             {
                 var values = line.Split(',');
                 modelDtos.Add(new ModelCsvDto(
-                               int.Parse(values[0]),
-                        values[1],
-                        values[2], 
-                    values[3], 
-                      int.Parse(values[4])));
+                    int.Parse(values[0]),
+                    values[1],
+                    values[2],
+                    values[3],
+                    int.Parse(values[4])));
             }
         }
 
@@ -100,18 +97,18 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
             {
                 var mg = modelGroupEntities
                     .FirstOrDefault(m => m.ModelGroupCode == x.ModelGroupCode);
-                
+
                 if (mg == null) throw new Exception("Model group code not found");
                 return new Model(
                     x.ModelCode,
                     x.ModelName,
-                    mg.Id); 
+                    mg.Id);
             })
             .ToList();*/
 
         // call db context and add to db 
-        
-        
+
+
         await dbContext.ModelGroups.AddRangeAsync(modelGroupEntities);
         await dbContext.SaveChangesAsync();
 

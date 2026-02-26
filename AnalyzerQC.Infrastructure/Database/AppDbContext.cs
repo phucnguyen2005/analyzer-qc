@@ -74,7 +74,7 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasMany(e => e.Analyzers)
             .WithOne(e => e.AssignedSite)
             .HasForeignKey(e => e.SiteId);
-        
+
         modelBuilder.Entity<Site>()
             .Property(s => s.WorkingTime)
             .HasColumnName(nameof(Site.WorkingTime).ToSnakeCase())
@@ -145,7 +145,7 @@ public class AppDbContext : DbContext, IAppDbContext
             .Property(e => e.ModelGroupId)
             .HasColumnName(nameof(AnalyzerQC.Model.ModelGroupId).ToSnakeCase());
 
-        
+
         modelBuilder.Entity<ModelGroup>()
             .ToTable(nameof(ModelGroup).ToSnakeCase());
         modelBuilder.Entity<ModelGroup>()

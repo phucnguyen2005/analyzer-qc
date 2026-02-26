@@ -1,22 +1,22 @@
 ﻿using AnalyzerQC.Application;
 using AnalyzerQC.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.WebApi.Controllers;
+
 //TODO: update route where applicable
 [ApiController]
-[Route("analyzers")]
-public class AnalyzerController: ControllerBase
+[Route("api/analyzers")]
+public class AnalyzerController : ControllerBase
 {
     private readonly IAnalyzerService _analyzerService;
+
     public AnalyzerController(IAnalyzerService analyzerService)
     {
         _analyzerService = analyzerService;
     }
 
     [HttpGet]
-    
     public async Task<List<Analyzer>> GetAnalyzers(string? sitecode)
     {
         return await _analyzerService.GetAnalyzers(sitecode);

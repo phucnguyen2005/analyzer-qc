@@ -11,30 +11,33 @@ public class Site
     public const int SiteCodeLength = 8;
     public const int MaxSiteNameLength = 100;
     public const int MaxAnalyzer = 10;
-    
-    
+
+
     public Guid Id { get; private set; }
     public string SiteName { get; private set; }
     public string SiteCode { get; set; }
-    public string Address { get; private set; } 
+    public string Address { get; private set; }
     public string TimeZone { get; private set; } = null!;
     public bool IsActive { get; set; }
     public List<Analyzer> Analyzers { get; private set; }
     public string WorkingTime { get; set; }
-    public float Frequency {get;  set;}
-    public NotificationTypes NotificationType {get; set;}
+    public float Frequency { get; set; }
+    public NotificationTypes NotificationType { get; set; }
 
-    
-    public List<WorkingDays> WorkingDays {get;  set;}
 
-    private Site(){}    //for efcore
+    public List<WorkingDays> WorkingDays { get; set; }
+
+    private Site()
+    {
+    } //for efcore
+
     public Site(string siteName, string siteCode, string address, string timeZone, bool isActive)
     {
         if (siteCode.Length != SiteCodeLength)
         {
             throw new ArgumentException(SiteCodeLengthError);
         }
-        
+
         Update(siteName, address, timeZone);
         SiteCode = siteCode;
         IsActive = isActive;
@@ -69,9 +72,7 @@ public class Site
         {
             throw new InvalidOperationException(SiteFullError);
         }
-        
+
         Analyzers.Add(analyzer);
     }
-    
-    
 }
