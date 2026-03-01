@@ -1,8 +1,9 @@
-﻿namespace AnalyzerQC;
+﻿using AnalyzerQC.Commons;
 
-public class Analyzer
+namespace AnalyzerQC;
+
+public class Analyzer : FullAuditedEntity<Guid>
 {
-    public Guid Id { get; private set; }
     public int ModelId { get; set; }
     public Model Model { get; set; }
 

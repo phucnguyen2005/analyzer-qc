@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AnalyzerQC.WebApi.Controllers;
 
-//TODO: update route where applicable
 [ApiController]
 [Route("api/analyzers")]
 public class AnalyzerController : ControllerBase

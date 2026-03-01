@@ -2,7 +2,7 @@
 
 namespace AnalyzerQC;
 
-public class Site
+public class Site : FullAuditedEntity<Guid>
 {
     public const string SiteNameLengthError = "Site name length is not valid";
     public const string SiteCodeLengthError = "Site code length is not valid";
@@ -13,7 +13,6 @@ public class Site
     public const int MaxAnalyzer = 10;
 
 
-    public Guid Id { get; private set; }
     public string SiteName { get; private set; }
     public string SiteCode { get; set; }
     public string Address { get; private set; }

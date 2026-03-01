@@ -36,6 +36,27 @@ public class AppDbContext : DbContext, IAppDbContext
             .Property(s => s.Id)
             .HasColumnName(nameof(User.Id).ToSnakeCase())
             .IsRequired();
+        modelBuilder.Entity<User>()
+            .Property(s => s.CreationTime)
+            .HasColumnName(nameof(User.CreationTime).ToSnakeCase());
+        modelBuilder.Entity<User>()
+            .Property(s => s.CreatorId)
+            .HasColumnName(nameof(User.CreatorId).ToSnakeCase());
+        modelBuilder.Entity<User>()
+            .Property(s => s.LastModificationTime)
+            .HasColumnName(nameof(User.LastModificationTime).ToSnakeCase());
+        modelBuilder.Entity<User>()
+            .Property(s => s.LastModifierId)
+            .HasColumnName(nameof(User.LastModifierId).ToSnakeCase());
+        modelBuilder.Entity<User>()
+            .Property(s => s.DeleterId)
+            .HasColumnName(nameof(User.DeleterId).ToSnakeCase());
+        modelBuilder.Entity<User>()
+            .Property(s => s.DeletionTime)
+            .HasColumnName(nameof(User.DeletionTime).ToSnakeCase());
+        modelBuilder.Entity<User>()
+            .Property(s => s.IsDeleted)
+            .HasColumnName(nameof(User.IsDeleted).ToSnakeCase());
 
 
         modelBuilder.Entity<Site>()
@@ -96,6 +117,27 @@ public class AppDbContext : DbContext, IAppDbContext
                 str => str.Split(',', StringSplitOptions.None)
                     .Select(x => Enum.Parse<WorkingDays>(x)).ToList()
             );
+        modelBuilder.Entity<Site>()
+            .Property(s => s.CreationTime)
+            .HasColumnName(nameof(Site.CreationTime).ToSnakeCase());
+        modelBuilder.Entity<Site>()
+            .Property(s => s.CreatorId)
+            .HasColumnName(nameof(Site.CreatorId).ToSnakeCase());
+        modelBuilder.Entity<Site>()
+            .Property(s => s.LastModificationTime)
+            .HasColumnName(nameof(Site.LastModificationTime).ToSnakeCase());
+        modelBuilder.Entity<Site>()
+            .Property(s => s.LastModifierId)
+            .HasColumnName(nameof(Site.LastModifierId).ToSnakeCase());
+        modelBuilder.Entity<Site>()
+            .Property(s => s.DeleterId)
+            .HasColumnName(nameof(Site.DeleterId).ToSnakeCase());
+        modelBuilder.Entity<Site>()
+            .Property(s => s.DeletionTime)
+            .HasColumnName(nameof(Site.DeletionTime).ToSnakeCase());
+        modelBuilder.Entity<Site>()
+            .Property(s => s.IsDeleted)
+            .HasColumnName(nameof(Site.IsDeleted).ToSnakeCase());
 
         modelBuilder.Entity<Analyzer>()
             .ToTable(nameof(Analyzer).ToSnakeCase());
@@ -118,7 +160,27 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<Analyzer>()
             .Property(e => e.ModelId)
             .HasColumnName(nameof(Analyzer.ModelId).ToSnakeCase());
-
+        modelBuilder.Entity<Analyzer>()
+            .Property(s => s.CreationTime)
+            .HasColumnName(nameof(Analyzer.CreationTime).ToSnakeCase());
+        modelBuilder.Entity<Analyzer>()
+            .Property(s => s.CreatorId)
+            .HasColumnName(nameof(Analyzer.CreatorId).ToSnakeCase());
+        modelBuilder.Entity<Analyzer>()
+            .Property(s => s.LastModificationTime)
+            .HasColumnName(nameof(Analyzer.LastModificationTime).ToSnakeCase());
+        modelBuilder.Entity<Analyzer>()
+            .Property(s => s.LastModifierId)
+            .HasColumnName(nameof(Analyzer.LastModifierId).ToSnakeCase());
+        modelBuilder.Entity<Analyzer>()
+            .Property(s => s.DeleterId)
+            .HasColumnName(nameof(Analyzer.DeleterId).ToSnakeCase());
+        modelBuilder.Entity<Analyzer>()
+            .Property(s => s.DeletionTime)
+            .HasColumnName(nameof(Analyzer.DeletionTime).ToSnakeCase());
+        modelBuilder.Entity<Analyzer>()
+            .Property(s => s.IsDeleted)
+            .HasColumnName(nameof(Analyzer.IsDeleted).ToSnakeCase());
 
         modelBuilder.Entity<Model>()
             .ToTable(nameof(AnalyzerQC.Model).ToSnakeCase());
@@ -144,6 +206,12 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<Model>()
             .Property(e => e.ModelGroupId)
             .HasColumnName(nameof(AnalyzerQC.Model.ModelGroupId).ToSnakeCase());
+        modelBuilder.Entity<Model>()
+            .Property(s => s.CreationTime)
+            .HasColumnName(nameof(AnalyzerQC.Model.CreationTime).ToSnakeCase());
+        modelBuilder.Entity<Model>()
+            .Property(s => s.CreatorId)
+            .HasColumnName(nameof(AnalyzerQC.Model.CreatorId).ToSnakeCase());
 
 
         modelBuilder.Entity<ModelGroup>()
@@ -167,5 +235,11 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasMany(e => e.Models)
             .WithOne(e => e.ModelGroup)
             .HasForeignKey(e => e.ModelGroupId);
+        modelBuilder.Entity<ModelGroup>()
+            .Property(s => s.CreationTime)
+            .HasColumnName(nameof(ModelGroup.CreationTime).ToSnakeCase());
+        modelBuilder.Entity<ModelGroup>()
+            .Property(s => s.CreatorId)
+            .HasColumnName(nameof(ModelGroup.CreatorId).ToSnakeCase());
     }
 }

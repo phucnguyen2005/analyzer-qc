@@ -1,6 +1,8 @@
-﻿namespace AnalyzerQC;
+﻿using AnalyzerQC.Commons;
 
-public class Model
+namespace AnalyzerQC;
+
+public class Model : CreationAuditedEntity<int>
 {
     public const int ModelCodeLength = 10;
     public const int MinModelNameLength = 8;
@@ -9,7 +11,6 @@ public class Model
     public const string ModelCodeLengthError = "Model code length is not valid";
 
 
-    public int Id { get; private set; }
     public int ModelGroupId { get; private set; }
     public ModelGroup ModelGroup { get; private set; }
     public string ModelCode { get; private set; }
