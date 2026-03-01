@@ -1,4 +1,5 @@
 ﻿using AnalyzerQC.Commons;
+using AnalyzerQC.ValueObject;
 
 namespace AnalyzerQC;
 

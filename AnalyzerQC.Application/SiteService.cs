@@ -97,7 +97,7 @@ public class SiteService : ISiteService
         {
             Frequency = data.Frequency,
             NotificationType = data.NotificationType,
-            WorkingTime = data.WorkingTime, //TODO: should display as standard
+            WorkingTime = data.WorkingTime, 
             WorkingDays = data.WorkingDays
         };
         return results;

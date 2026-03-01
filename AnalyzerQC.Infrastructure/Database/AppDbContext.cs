@@ -1,6 +1,8 @@
 ﻿using AnalyzerQC.Application;
 using AnalyzerQC.Commons;
+using AnalyzerQC.ValueObject;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace AnalyzerQC.Infrastructure.Database;
 
@@ -20,6 +22,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Model> Models { get; set; }
     public DbSet<ModelGroup> ModelGroups { get; set; }
     public DbSet<Analyzer> Analyzers { get; set; }
+    public DbSet<Reagent> Reagents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -95,7 +98,6 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasMany(e => e.Analyzers)
             .WithOne(e => e.AssignedSite)
             .HasForeignKey(e => e.SiteId);
-
         modelBuilder.Entity<Site>()
             .Property(s => s.WorkingTime)
             .HasColumnName(nameof(Site.WorkingTime).ToSnakeCase())
@@ -115,7 +117,7 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasConversion(
                 workingDays => string.Join(',', workingDays),
                 str => str.Split(',', StringSplitOptions.None)
-                    .Select(x => Enum.Parse<WorkingDays>(x)).ToList()
+                    .Select(Enum.Parse<WorkingDays>).ToList()
             );
         modelBuilder.Entity<Site>()
             .Property(s => s.CreationTime)
@@ -241,5 +243,52 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<ModelGroup>()
             .Property(s => s.CreatorId)
             .HasColumnName(nameof(ModelGroup.CreatorId).ToSnakeCase());
+        modelBuilder.Entity<ModelGroup>()
+            .HasMany(e => e.Reagents)
+            .WithOne(e => e.ModelGroup)
+            .HasForeignKey(e => e.ModelGroupId);
+        
+        modelBuilder.Entity<Reagent>()
+            .ToTable(nameof(Reagent).ToSnakeCase());
+        modelBuilder.Entity<Reagent>()
+            .HasKey(e => e.Id);
+        modelBuilder.Entity<Reagent>()
+            .Property(e => e.Id)
+            .HasColumnName(nameof(Reagent.Id).ToSnakeCase());
+        modelBuilder.Entity<Reagent>()
+            .Property(e => e.ReagentCode)
+            .HasColumnName(nameof(Reagent.ReagentCode).ToSnakeCase())
+            .IsRequired();
+        modelBuilder.Entity<Reagent>()
+            .Property(e => e.ReagentName)
+            .HasColumnName(nameof(Reagent.ReagentName).ToSnakeCase())
+            .IsRequired();
+        modelBuilder.Entity<Reagent>()
+            .Property(e => e.Description)
+            .HasColumnName(nameof(Reagent.Description).ToSnakeCase());
+        modelBuilder.Entity<Reagent>()
+            .Property(e => e.Status)
+            .HasColumnName(nameof(Reagent.Status).ToSnakeCase())
+            .IsRequired();
+        modelBuilder.Entity<Reagent>()
+            .Property(e => e.Levels)
+            .HasColumnName(nameof(Reagent.Levels).ToSnakeCase())
+            .IsRequired()
+            .HasConversion(
+                levels => string.Join(' ', levels.Select(l => $"{l.LevelCode}:{l.LevelName}")),
+                str => str.Split(' ', StringSplitOptions.None)
+                    .Select(x => new Level(
+                        x.Split(':', StringSplitOptions.None)[0],
+                        x.Split(':', StringSplitOptions.None)[1]))
+                    .ToList());
+        modelBuilder.Entity<Reagent>()
+            .Property(s => s.CreationTime)
+            .HasColumnName(nameof(Reagent.CreationTime).ToSnakeCase());
+        modelBuilder.Entity<Reagent>()
+            .Property(s => s.CreatorId)
+            .HasColumnName(nameof(Reagent.CreatorId).ToSnakeCase());
+        modelBuilder.Entity<Reagent>()
+            .Property(e => e.ModelGroupId)
+            .HasColumnName(nameof(Reagent.ModelGroupId).ToSnakeCase());
     }
 }
