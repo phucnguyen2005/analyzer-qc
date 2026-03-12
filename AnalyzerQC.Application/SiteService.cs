@@ -1,5 +1,4 @@
 ﻿using AnalyzerQC.Application.Dtos;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.Application;
@@ -75,7 +74,7 @@ public class SiteService : ISiteService
     }
 
 
-    public async Task<bool> UpdateSite([FromBody] UpdateSiteDto site)
+    public async Task<bool> UpdateSite(UpdateSiteDto site)
     {
         var existingSite = await _dbContext.Sites.FirstOrDefaultAsync(s => s.Id == site.Id);
         if (existingSite == null) return false;
@@ -87,7 +86,7 @@ public class SiteService : ISiteService
     }
 
 
-    public async Task<SiteSettingsDto?> GetSiteSettingsBySiteId([FromRoute] Guid siteId)
+    public async Task<SiteSettingsDto?> GetSiteSettingsBySiteId(Guid siteId)
     {
         var data = await _dbContext.Sites
             .Include(site => site.Analyzers)
@@ -95,15 +94,16 @@ public class SiteService : ISiteService
         if (data == null) return null;
         var results = new SiteSettingsDto
         {
+            SiteId = siteId,
             Frequency = data.Frequency,
             NotificationType = data.NotificationType,
-            WorkingTime = data.WorkingTime, 
+            WorkingTime = data.WorkingTime,
             WorkingDays = data.WorkingDays
         };
         return results;
     }
 
-    public async Task<bool> UpdateSiteSettings([FromBody] UpdateSiteSettingsDto site)
+    public async Task<bool> UpdateSiteSettings(UpdateSiteSettingsDto site)
     {
         var data = await _dbContext.Sites.FirstOrDefaultAsync(s => s.Id == site.Id);
         if (data == null) return false;

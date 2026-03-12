@@ -115,7 +115,30 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
         return "Ok";
     })
     .WithName("Seed master data - Model groups and models");
+app.MapGet("/seed-reagents", async (AppDbContext dbContext) =>
+    {
+        List<ReagentCsvDto> reagentCsvDtos = [];
+        using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\reagents.csv"))
+        {
+            var headerLine = sr.ReadLine(); // read and ignore header
+            while (sr.ReadLine() is { } line)
+            {
+                var values = line.Split(',');
+                var levels = values[1].Split('|');
+                List<string> levelList = [];
+                foreach (var level in levels)
+                {
+                    levelList.Add(level);
+                }
+                var isActive = values[4] == "1" ? true : false;
+                reagentCsvDtos.Add(new ReagentCsvDto(values[0], levelList, isActive, values[3]));
+            }
+        }
 
+
+        return "Ok";
+    })
+    .WithName("Seed master data - Reagents");
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

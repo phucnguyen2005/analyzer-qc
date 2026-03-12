@@ -64,14 +64,5 @@ public class Site : FullAuditedEntity<Guid>
         TimeZone = timeZone;
         Address = address;
     }
-
-    public void AddAnalyzer(Analyzer analyzer)
-    {
-        if (Analyzers.Count >= MaxAnalyzer)
-        {
-            throw new InvalidOperationException(SiteFullError);
-        }
-
-        Analyzers.Add(analyzer);
-    }
+    
 }

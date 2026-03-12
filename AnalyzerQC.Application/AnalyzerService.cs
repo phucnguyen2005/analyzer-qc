@@ -1,5 +1,4 @@
 ﻿using AnalyzerQC.Application.Dtos;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.Application;
@@ -23,7 +22,7 @@ public class AnalyzerService : IAnalyzerService
     }
 
 
-    public async Task<List<Analyzer>> GetAnalyzers([FromQuery] string? sitecode)
+    public async Task<List<Analyzer>> GetAnalyzers(string? sitecode)
     {
         var data = _dbContext.Analyzers;
 
@@ -56,7 +55,7 @@ public class AnalyzerService : IAnalyzerService
     }
 
 
-    public async Task<bool> AddAnalyzer([FromBody] CreateAnalyzerDto analyzer)
+    public async Task<bool> AddAnalyzer(CreateAnalyzerDto analyzer)
     {
         var model = await _dbContext.Models.FirstOrDefaultAsync(m => m.ModelCode == analyzer.ModelCode); // LINQ
         if (model == null) return false;
@@ -77,7 +76,7 @@ public class AnalyzerService : IAnalyzerService
         // return 500 Internal Server Error
     }
 
-    public async Task<bool> UpdateAnalyzer([FromBody] UpdateAnalyzerDto analyzer)
+    public async Task<bool> UpdateAnalyzer(UpdateAnalyzerDto analyzer)
     {
         var existingAnalyzer = await _dbContext.Analyzers
             .FirstOrDefaultAsync(a => a.Id == analyzer.Id);

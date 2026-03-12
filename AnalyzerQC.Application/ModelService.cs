@@ -1,5 +1,4 @@
 ﻿using AnalyzerQC.Application.Dtos;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnalyzerQC.Application;
@@ -20,7 +19,7 @@ public class ModelService : IModelService
         _dbContext = dbContext;
     }
 
-    public async Task<List<Model>> GetModel([FromQuery] string? modelCode) // method of ModelController
+    public async Task<List<Model>> GetModel(string? modelCode) // method of ModelController
     {
         var data = _dbContext.Models;
 
@@ -40,7 +39,7 @@ public class ModelService : IModelService
     }
 
 
-    public async Task<bool> AddModel([FromBody] CreateModelDto model)
+    public async Task<bool> AddModel(CreateModelDto model)
     {
         var modelGroup = await _dbContext.ModelGroups.FirstOrDefaultAsync(m => m.Id == model.ModelGroupId); // LINQ
         if (modelGroup == null) return false;

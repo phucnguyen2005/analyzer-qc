@@ -2,7 +2,6 @@
 
 public class SiteDto
 {
-    //TODO: include siteId
     public Guid SiteId { get; set; }
     public string SiteCode { get; set; }
     public string SiteName { get; set; }

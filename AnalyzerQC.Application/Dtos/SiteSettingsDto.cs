@@ -4,7 +4,7 @@ namespace AnalyzerQC.Application.Dtos;
 
 public class SiteSettingsDto
 {
-    //TODO: include siteId
+    public Guid SiteId { get; set; }
     public float Frequency { get; set; }
     public NotificationTypes NotificationType { get; set; }
     public List<WorkingDays> WorkingDays { get; set; }

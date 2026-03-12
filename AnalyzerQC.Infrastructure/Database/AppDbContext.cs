@@ -247,7 +247,7 @@ public class AppDbContext : DbContext, IAppDbContext
             .HasMany(e => e.Reagents)
             .WithOne(e => e.ModelGroup)
             .HasForeignKey(e => e.ModelGroupId);
-        
+
         modelBuilder.Entity<Reagent>()
             .ToTable(nameof(Reagent).ToSnakeCase());
         modelBuilder.Entity<Reagent>()
@@ -255,10 +255,6 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<Reagent>()
             .Property(e => e.Id)
             .HasColumnName(nameof(Reagent.Id).ToSnakeCase());
-        modelBuilder.Entity<Reagent>()
-            .Property(e => e.ReagentCode)
-            .HasColumnName(nameof(Reagent.ReagentCode).ToSnakeCase())
-            .IsRequired();
         modelBuilder.Entity<Reagent>()
             .Property(e => e.ReagentName)
             .HasColumnName(nameof(Reagent.ReagentName).ToSnakeCase())

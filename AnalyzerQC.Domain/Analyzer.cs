@@ -4,6 +4,7 @@ namespace AnalyzerQC;
 
 public class Analyzer : FullAuditedEntity<Guid>
 {
+    public static string SerialNumberLengthErrorMessage = "serialNumber must be 8 characters long";
     public int ModelId { get; set; }
     public Model Model { get; set; }
 
@@ -21,7 +22,7 @@ public class Analyzer : FullAuditedEntity<Guid>
     {
         if (serialNumber.Length != 8)
         {
-            throw new ArgumentException("serialNumber must be 8 characters long");
+            throw new ArgumentException(SerialNumberLengthErrorMessage);
         }
 
         Model = model;

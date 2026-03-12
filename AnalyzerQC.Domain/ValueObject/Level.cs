@@ -17,6 +17,4 @@ public class Level : Commons.ValueObject
         yield return LevelCode;
         yield return LevelName;
     }
-
-    
 }
