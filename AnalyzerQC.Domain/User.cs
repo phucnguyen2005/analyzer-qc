@@ -8,15 +8,15 @@ public class User : FullAuditedEntity<Guid>
     public const int MaxUserNameLength = 20;
     public const string InvalidUsernameError = "Invalid username";
 
-    public string Username { get; private set; }
+    public string UserName { get; private set; }
 
-    public User(string username)
+    public User(string userName)
     {
-        if (username.Length < MinUserNameLength || username.Length > MaxUserNameLength)
+        if (userName.Length < MinUserNameLength || userName.Length > MaxUserNameLength)
         {
             throw new Exception(InvalidUsernameError);
         }
 
-        Username = username;
+        UserName = userName;
     }
 }

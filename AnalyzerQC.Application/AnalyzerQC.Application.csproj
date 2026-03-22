@@ -7,18 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.1" />
-
-      <ProjectReference Include="..\AnalyzerQC.Domain\AnalyzerQC.Domain.csproj" />
-      
+        <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.1"/>
     </ItemGroup>
-    
+
+    <ItemGroup>
+        <ProjectReference Include="..\AnalyzerQC.Domain\AnalyzerQC.Domain.csproj"/>
+    </ItemGroup>
 </Project>

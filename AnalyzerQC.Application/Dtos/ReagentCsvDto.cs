@@ -1,6 +1,4 @@
-﻿using AnalyzerQC.ValueObject;
-
-namespace AnalyzerQC.Application.Dtos;
+﻿namespace AnalyzerQC.Application.Dtos;
 
 public class ReagentCsvDto
 {

@@ -102,4 +102,19 @@ public class SiteUnitTest
         Assert.Equal(site.Address, updatedAddress);
         Assert.Equal(site.TimeZone, updatedTimeZone);
     }
+    
+    [Fact]
+    public void InitSite_WhenSiteCodeIsNot8Characters_ThenThrowException()
+    {
+        // Arrange
+        var siteName = "HelloSiteName";
+        var siteCode = "Hell"; // Fail due to not 8 characters
+        var address = "Address";
+        var timeZone = "TimeZone";
+        var isActive = true;
+
+        // Act Assert
+        var ex = Assert.Throws<ArgumentException>(() => new Site(siteName, siteCode, address, timeZone, isActive));
+        Assert.Equal(Site.SiteCodeLengthError, ex.Message);
+    }
 }

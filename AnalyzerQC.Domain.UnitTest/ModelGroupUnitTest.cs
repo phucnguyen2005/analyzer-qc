@@ -40,5 +40,14 @@ public class ModelGroupUnitTest
         Assert.Equal(ModelGroup.ModelGroupCodeLengthError, ex.Message);
         
     }
+
+    [Fact]
+    public void AddModel_WhenValid_ThenAddModelToList()
+    {
+        var model = new Model("ModelName", "ModelCode1", 1);
+        var modelGroup = new ModelGroup("ModelGroupName", "01234567");
+        modelGroup.AddModel(model);
+        Assert.Contains(model, modelGroup.Models);
+    }
     
 }
