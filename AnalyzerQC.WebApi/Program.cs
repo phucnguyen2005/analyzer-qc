@@ -94,6 +94,9 @@ builder.Services.AddScoped<IAnalyzerService, AnalyzerService>();
 builder.Services.AddScoped<IModelGroupService, ModelGroupService>();
 builder.Services.AddScoped<IModelService, ModelService>();
 builder.Services.AddScoped<ISiteService, SiteService>();
+builder.Services.AddScoped<IAssayLimitService, AssayLimitService>();
+builder.Services.AddScoped<ILotService, LotService>();
+
 builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 {
     optionsBuilder.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));

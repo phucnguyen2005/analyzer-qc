@@ -14,7 +14,10 @@ public class ModelGroup : CreationAuditedEntity<int>
     public string ModelGroupCode { get; private set; }
     public List<Model> Models { get; private set; } = []; //navigation property
     public List<Reagent> Reagents { get; private set; } = [];
-    
+
+    public ModelGroup()
+    {
+    }
 
     public ModelGroup(string modelGroupName, string modelGroupCode)
     {
@@ -36,6 +39,4 @@ public class ModelGroup : CreationAuditedEntity<int>
     {
         Models.Add(model);
     }
-
-   
 }

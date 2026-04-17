@@ -20,6 +20,12 @@ public class ParameterConfiguration : IEntityTypeConfiguration<Parameter>
             .HasColumnName(nameof(Parameter.ParameterName).ToSnakeCase())
             .IsRequired();
         builder
+            .HasIndex(e => e.ParameterCode)
+            .IsUnique();
+        builder
+            .Property(e => e.ParameterCode)
+            .HasColumnName(nameof(Parameter.ParameterCode).ToSnakeCase());
+        builder
             .Property(e => e.ParameterUnits)
             .HasColumnName(nameof(Parameter.ParameterUnits).ToSnakeCase())
             .IsRequired()

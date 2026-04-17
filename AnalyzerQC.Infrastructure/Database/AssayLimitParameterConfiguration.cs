@@ -27,6 +27,9 @@ public class AssayLimitParameterConfiguration : IEntityTypeConfiguration<AssayLi
             .Property(e => e.ParameterId)
             .HasColumnName(nameof(AssayLimitParameter.ParameterId).ToSnakeCase());
         builder
+            .Property(e => e.AssayLimitId)
+            .HasColumnName(nameof(AssayLimitParameter.AssayLimitId).ToSnakeCase());
+        builder
             .Property(s => s.CreationTime)
             .HasColumnName(nameof(AssayLimitParameter.CreationTime).ToSnakeCase());
         builder

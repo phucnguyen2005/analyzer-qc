@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using AnalyzerQC.ValueObject;
+﻿using AnalyzerQC.ValueObject;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AnalyzerQC.Infrastructure.Database;

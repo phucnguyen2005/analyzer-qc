@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AnalyzerQC.WebApi.Migrations
+namespace AnalyzerQC.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -16,7 +16,7 @@ namespace AnalyzerQC.WebApi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("AnalyzerQC.Analyzer", b =>
@@ -79,6 +79,190 @@ namespace AnalyzerQC.WebApi.Migrations
                     b.HasIndex("SiteId");
 
                     b.ToTable("analyzer", (string)null);
+                });
+
+            modelBuilder.Entity("AnalyzerQC.AssayLimit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("creation_time");
+
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("DeleterId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("deleter_id");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("deletion_time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("last_modification_time");
+
+                    b.Property<string>("LastModifierId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("last_modifier_id");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("level");
+
+                    b.Property<Guid>("LotId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("lot_id");
+
+                    b.Property<int>("ReagentId")
+                        .HasColumnType("int")
+                        .HasColumnName("reagent_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LotId");
+
+                    b.HasIndex("ReagentId");
+
+                    b.ToTable("assay_limit", (string)null);
+                });
+
+            modelBuilder.Entity("AnalyzerQC.AssayLimitParameter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AssayLimitId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("assay_limit_id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("creation_time");
+
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("DeleterId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("deleter_id");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("deletion_time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("last_modification_time");
+
+                    b.Property<string>("LastModifierId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("last_modifier_id");
+
+                    b.Property<float>("LowerLimit")
+                        .HasColumnType("float")
+                        .HasColumnName("lower_limit");
+
+                    b.Property<int>("ParameterId")
+                        .HasColumnType("int")
+                        .HasColumnName("parameter_id");
+
+                    b.Property<float>("Target")
+                        .HasColumnType("float")
+                        .HasColumnName("target");
+
+                    b.Property<float>("UpperLimit")
+                        .HasColumnType("float")
+                        .HasColumnName("upper_limit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssayLimitId");
+
+                    b.HasIndex("ParameterId");
+
+                    b.ToTable("assay_limit_parameter", (string)null);
+                });
+
+            modelBuilder.Entity("AnalyzerQC.Lot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("creation_time");
+
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("DeleterId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("deleter_id");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("deletion_time");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("expiry_date");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("last_modification_time");
+
+                    b.Property<string>("LastModifierId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("last_modifier_id");
+
+                    b.Property<string>("LotCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("lot_code");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("start_date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LotCode")
+                        .IsUnique();
+
+                    b.ToTable("lot", (string)null);
                 });
 
             modelBuilder.Entity("AnalyzerQC.Model", b =>
@@ -155,6 +339,45 @@ namespace AnalyzerQC.WebApi.Migrations
                     b.ToTable("model_group", (string)null);
                 });
 
+            modelBuilder.Entity("AnalyzerQC.Parameter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("creation_time");
+
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("ParameterCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("parameter_code");
+
+                    b.Property<string>("ParameterName")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("parameter_name");
+
+                    b.Property<string>("ParameterUnits")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("parameter_units");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParameterCode")
+                        .IsUnique();
+
+                    b.ToTable("parameter", (string)null);
+                });
+
             modelBuilder.Entity("AnalyzerQC.Reagent", b =>
                 {
                     b.Property<int>("Id")
@@ -181,13 +404,9 @@ namespace AnalyzerQC.WebApi.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("levels");
 
-                    b.Property<int>("ModelGroupId")
-                        .HasColumnType("int")
-                        .HasColumnName("model_group_id");
-
                     b.Property<string>("ReagentCode")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasColumnType("varchar(255)")
                         .HasColumnName("reagent_code");
 
                     b.Property<string>("ReagentName")
@@ -201,7 +420,8 @@ namespace AnalyzerQC.WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModelGroupId");
+                    b.HasIndex("ReagentCode")
+                        .IsUnique();
 
                     b.ToTable("reagent", (string)null);
                 });
@@ -329,15 +549,48 @@ namespace AnalyzerQC.WebApi.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("last_modifier_id");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)")
-                        .HasColumnName("username");
+                        .HasColumnName("user_name");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("user", (string)null);
+                });
+
+            modelBuilder.Entity("LotReagent", b =>
+                {
+                    b.Property<Guid>("LotsId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("ReagentsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LotsId", "ReagentsId");
+
+                    b.HasIndex("ReagentsId");
+
+                    b.ToTable("lot_reagent", (string)null);
+                });
+
+            modelBuilder.Entity("ModelGroupReagent", b =>
+                {
+                    b.Property<int>("ModelGroupsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReagentsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ModelGroupsId", "ReagentsId");
+
+                    b.HasIndex("ReagentsId");
+
+                    b.ToTable("model_group_reagent", (string)null);
                 });
 
             modelBuilder.Entity("AnalyzerQC.Analyzer", b =>
@@ -359,6 +612,44 @@ namespace AnalyzerQC.WebApi.Migrations
                     b.Navigation("Model");
                 });
 
+            modelBuilder.Entity("AnalyzerQC.AssayLimit", b =>
+                {
+                    b.HasOne("AnalyzerQC.Lot", "Lot")
+                        .WithMany("AssayLimits")
+                        .HasForeignKey("LotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AnalyzerQC.Reagent", "Reagent")
+                        .WithMany("AssayLimits")
+                        .HasForeignKey("ReagentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lot");
+
+                    b.Navigation("Reagent");
+                });
+
+            modelBuilder.Entity("AnalyzerQC.AssayLimitParameter", b =>
+                {
+                    b.HasOne("AnalyzerQC.AssayLimit", "AssayLimit")
+                        .WithMany("AssayLimitParameters")
+                        .HasForeignKey("AssayLimitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AnalyzerQC.Parameter", "Parameter")
+                        .WithMany("AssayLimitParameters")
+                        .HasForeignKey("ParameterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssayLimit");
+
+                    b.Navigation("Parameter");
+                });
+
             modelBuilder.Entity("AnalyzerQC.Model", b =>
                 {
                     b.HasOne("AnalyzerQC.ModelGroup", "ModelGroup")
@@ -370,15 +661,44 @@ namespace AnalyzerQC.WebApi.Migrations
                     b.Navigation("ModelGroup");
                 });
 
-            modelBuilder.Entity("AnalyzerQC.Reagent", b =>
+            modelBuilder.Entity("LotReagent", b =>
                 {
-                    b.HasOne("AnalyzerQC.ModelGroup", "ModelGroup")
-                        .WithMany("Reagents")
-                        .HasForeignKey("ModelGroupId")
+                    b.HasOne("AnalyzerQC.Lot", null)
+                        .WithMany()
+                        .HasForeignKey("LotsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ModelGroup");
+                    b.HasOne("AnalyzerQC.Reagent", null)
+                        .WithMany()
+                        .HasForeignKey("ReagentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelGroupReagent", b =>
+                {
+                    b.HasOne("AnalyzerQC.ModelGroup", null)
+                        .WithMany()
+                        .HasForeignKey("ModelGroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AnalyzerQC.Reagent", null)
+                        .WithMany()
+                        .HasForeignKey("ReagentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AnalyzerQC.AssayLimit", b =>
+                {
+                    b.Navigation("AssayLimitParameters");
+                });
+
+            modelBuilder.Entity("AnalyzerQC.Lot", b =>
+                {
+                    b.Navigation("AssayLimits");
                 });
 
             modelBuilder.Entity("AnalyzerQC.Model", b =>
@@ -389,8 +709,16 @@ namespace AnalyzerQC.WebApi.Migrations
             modelBuilder.Entity("AnalyzerQC.ModelGroup", b =>
                 {
                     b.Navigation("Models");
+                });
 
-                    b.Navigation("Reagents");
+            modelBuilder.Entity("AnalyzerQC.Parameter", b =>
+                {
+                    b.Navigation("AssayLimitParameters");
+                });
+
+            modelBuilder.Entity("AnalyzerQC.Reagent", b =>
+                {
+                    b.Navigation("AssayLimits");
                 });
 
             modelBuilder.Entity("AnalyzerQC.Site", b =>

@@ -1,5 +1,6 @@
 ﻿using MockQueryable.Moq;
 using Moq;
+
 namespace AnalyzerQC.Application.UnitTest;
 
 public class SiteServiceUnitTest

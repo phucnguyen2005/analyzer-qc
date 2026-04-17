@@ -1,7 +1,6 @@
 ﻿using AnalyzerQC.Application;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace AnalyzerQC.Infrastructure.Database;
 
 public class AppDbContext : DbContext, IAppDbContext

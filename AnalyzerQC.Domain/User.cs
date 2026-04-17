@@ -10,6 +10,10 @@ public class User : FullAuditedEntity<Guid>
 
     public string UserName { get; private set; }
 
+    public User()
+    {
+    }
+
     public User(string userName)
     {
         if (userName.Length < MinUserNameLength || userName.Length > MaxUserNameLength)

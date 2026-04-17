@@ -21,7 +21,6 @@ public class SiteService : ISiteService
     {
         _dbContext = dbContext;
     }
-    /*[Authorize]*/
 
 
     public async Task<List<SiteDto>> GetSitesBySiteId(Guid? siteId)

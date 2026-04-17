@@ -17,6 +17,10 @@ public class Model : CreationAuditedEntity<int>
     public string ModelName { get; private set; }
     public List<Analyzer> Analyzers { get; private set; }
 
+    public Model()
+    {
+    }
+
     public Model(string modelCode, string modelName, int modelGroupId)
     {
         if (modelCode.Length > ModelCodeLength)

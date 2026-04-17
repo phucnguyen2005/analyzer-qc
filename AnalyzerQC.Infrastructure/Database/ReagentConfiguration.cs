@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AnalyzerQC.ValueObject;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using AnalyzerQC.ValueObject;
-
 
 namespace AnalyzerQC.Infrastructure.Database;
 
@@ -20,6 +19,12 @@ public class ReagentConfiguration : IEntityTypeConfiguration<Reagent>
             .Property(e => e.ReagentName)
             .HasColumnName(nameof(Reagent.ReagentName).ToSnakeCase())
             .IsRequired();
+        builder
+            .HasIndex(e => e.ReagentCode)
+            .IsUnique();
+        builder
+            .Property(e => e.ReagentCode)
+            .HasColumnName(nameof(Reagent.ReagentCode).ToSnakeCase());
         builder
             .Property(e => e.Description)
             .HasColumnName(nameof(Reagent.Description).ToSnakeCase());

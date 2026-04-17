@@ -115,7 +115,7 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
         return "Ok";
     })
     .WithName("Seed master data - Model groups and models");
-app.MapGet("/seed-reagents", async (AppDbContext dbContext) =>
+/*app.MapGet("/seed-reagents", async (AppDbContext dbContext) =>
     {
         List<ReagentCsvDto> reagentCsvDtos = [];
         using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\reagents.csv"))
@@ -138,7 +138,39 @@ app.MapGet("/seed-reagents", async (AppDbContext dbContext) =>
 
         return "Ok";
     })
-    .WithName("Seed master data - Reagents");
+    .WithName("Seed master data - Reagents");*/
+app.MapGet("/seed-parameters", async (AppDbContext dbContext) =>
+{
+    List<ParameterCsvDto> parameterCsvDtos = [];
+    using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\parameters.csv"))
+    {
+        var headerLine = sr.ReadLine(); // read and ignore header
+        while (sr.ReadLine() is { } line)
+        {
+            var values = line.Split(',');
+            var parameterCode = values[2];
+            var parameterName = values[3];
+            parameterCsvDtos.Add(new ParameterCsvDto(parameterCode, parameterName));
+        }
+    }
+    using (StreamReader streamReader =  new StreamReader("C:\\Users\\Admin\\Downloads\\parameter-units.csv"))
+    {
+        var headerLine = streamReader.ReadLine(); // read and ignore header
+        while (streamReader.ReadLine() is { } line)
+        {
+            var values = line.Split(',');
+            var parameterId = int.Parse(values[1]);
+            var unitCode = values[2];
+            var conversionFactor = float.Parse(values[5]);
+            var parameter = parameterCsvDtos.FirstOrDefault(p => p.Id == parameterId);
+            if (parameter == null) throw new Exception("Parameter code not found");
+            parameter.ParameterUnits.Add(new ParameterUnitCsvDto(unitCode, conversionFactor));
+        }
+    }
+    var parameterEntities = parameterCsvDtos.Select(p => new Parameter(p.ParameterName, p.ParameterCode)).ToList();
+    await dbContext.Parameters.AddRangeAsync(parameterEntities);
+    await dbContext.SaveChangesAsync();
+});
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
