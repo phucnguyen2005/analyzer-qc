@@ -12,9 +12,9 @@ public class Level : Commons.ValueObject
         LevelName = levelName;
     }
     //TODO: no magic string
-    public static bool TryParse(string? input, out Level? level)
+    public static bool TryParse(string? input, out Level level)
     {
-        level = null;
+        level = null!;
         if (input == null)
         {
             return false;

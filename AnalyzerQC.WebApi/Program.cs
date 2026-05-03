@@ -1,5 +1,6 @@
 using System.Text;
 using AnalyzerQC.Application;
+using AnalyzerQC.Infrastructure;
 using AnalyzerQC.Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -23,46 +24,6 @@ builder.Services.AddAuthentication(x =>
         ValidateAudience = false,
     };
 });
-/*builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AnalyzerQC API", Version = "v1" });
-
-    // 1. Định nghĩa Security Scheme (Cấu hình nút Authorize nhập JWT)
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\nExample: 'Bearer 12345abcdef'",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    // 2. Yêu cầu bảo mật (Áp dụng Scheme ở trên cho các API)
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
-});*/
-/*builder.Services.AddAuthorization(option =>
-{
-    option.AddPolicy(IdentityData.AdminUserPolicyName,
-        p => { p.RequireClaim(IdentityData.AdminUserClaimName, "true"); });
-});*/
 
 
 builder.Services.AddControllers();
@@ -89,7 +50,7 @@ builder.Services.AddSwaggerGen(c =>
         [new OpenApiSecuritySchemeReference("Bearer", document)] = []
     });
 });
-
+builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IAnalyzerService, AnalyzerService>();
 builder.Services.AddScoped<IModelGroupService, ModelGroupService>();
 builder.Services.AddScoped<IModelService, ModelService>();
@@ -97,6 +58,7 @@ builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IAssayLimitService, AssayLimitService>();
 builder.Services.AddScoped<ILotService, LotService>();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 {
     optionsBuilder.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));

@@ -12,10 +12,13 @@ public class Parameter:CreationAuditedEntity<int>
     public Parameter()
     {
     }
-    public Parameter(string parameterName, string parameterCode)
+    public Parameter(string parameterName, string parameterCode, List<ParameterUnit> parameterUnits)
     {
         ParameterName = parameterName;
         ParameterCode = parameterCode;
+        ParameterUnits = parameterUnits;
+        CreatorId = "System";
+        CreationTime = DateTime.UtcNow;
     }
 
     public void AddParameterUnit(ParameterUnit parameterUnit)

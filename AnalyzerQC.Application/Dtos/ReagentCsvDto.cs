@@ -1,18 +1,19 @@
-﻿namespace AnalyzerQC.Application.Dtos;
+﻿using AnalyzerQC.ValueObject;
+
+namespace AnalyzerQC.Application.Dtos;
 
 public class ReagentCsvDto
 {
     public string ReagentName { get; set; }
-    public List<string> Levels { get; set; }
-
+    public List<Level> Levels { get; set; }
+    public List<ModelGroup> ModelGroups { get; set; }
     public bool Status { get; set; }
-    public string ModelGroupCode { get; set; }
 
-    public ReagentCsvDto(string reagentName, List<string> levels, bool status, string modelGroupCode)
+    public ReagentCsvDto(string reagentName, List<Level> levels, bool status, List<ModelGroup> modelGroups)
     {
         ReagentName = reagentName;
         Levels = levels;
         Status = status;
-        ModelGroupCode = modelGroupCode;
+        ModelGroups = modelGroups;
     }
 }

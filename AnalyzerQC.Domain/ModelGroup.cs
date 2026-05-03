@@ -33,6 +33,8 @@ public class ModelGroup : CreationAuditedEntity<int>
 
         ModelGroupName = modelGroupName;
         ModelGroupCode = modelGroupCode;
+        CreatorId = "System";
+        CreationTime = DateTime.UtcNow;
     }
 
     public void AddModel(Model model)

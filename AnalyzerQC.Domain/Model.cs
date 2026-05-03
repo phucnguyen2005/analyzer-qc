@@ -36,5 +36,7 @@ public class Model : CreationAuditedEntity<int>
         ModelCode = modelCode;
         ModelName = modelName;
         ModelGroupId = modelGroupId;
+        CreatorId = "System";
+        CreationTime = DateTime.UtcNow;
     }
 }

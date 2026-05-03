@@ -15,7 +15,7 @@ public class Lot : FullAuditedEntity<Guid>
     {
     }
     
-    public Lot(string lotCode, DateTime startDate, DateTime expiryDate, bool isActive)
+    public Lot(string lotCode, DateTime startDate, DateTime expiryDate, bool isActive, string creatorId)
     {
         if(lotCode.Length < 3 || lotCode.Length > 20)
         {
@@ -29,5 +29,7 @@ public class Lot : FullAuditedEntity<Guid>
         StartDate = startDate;
         ExpiryDate = expiryDate;
         IsActive = isActive;
+        CreatorId = creatorId;
+        CreationTime = DateTime.UtcNow;
     }
 }

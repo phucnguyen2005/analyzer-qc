@@ -29,11 +29,17 @@ public class ParameterConfiguration : IEntityTypeConfiguration<Parameter>
             .Property(e => e.ParameterUnits)
             .HasColumnName(nameof(Parameter.ParameterUnits).ToSnakeCase())
             .IsRequired()
-            .HasConversion(units => string.Join(' ', units.Select(l => $"{l.UnitCode}:{l.ConversionFactor}")),
-                str => str.Split(' ', StringSplitOptions.None)
-                    .Select(x => new ParameterUnit(
-                        x.Split(':', StringSplitOptions.None)[0],
-                        float.Parse(x.Split(':', StringSplitOptions.None)[1]))).ToList());
+            .HasConversion(units => 
+                    string.Join(' ', units.Select(l => $"{l.UnitCode}:{l.ConversionFactor}")),
+                str => str != string.Empty
+                    ? str
+                        .Split(' ', StringSplitOptions.None)
+                        .Select(x => new ParameterUnit( 
+                            x.Split(':', StringSplitOptions.None)[0],
+                            float.Parse(x.Split(':', StringSplitOptions.None)[1]))
+                    ).ToList()
+            : new List<ParameterUnit>()
+                );
         builder
             .HasMany(e => e.AssayLimitParameters)
             .WithOne(e => e.Parameter)

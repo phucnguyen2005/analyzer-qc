@@ -1,5 +1,6 @@
 ﻿using AnalyzerQC.Application;
 using AnalyzerQC.Application.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnalyzerQC.WebApi.Controllers;
@@ -28,10 +29,11 @@ public class AssayLimitController : ControllerBase
         return await _assayLimitService.GetAssayLimitsById(id);
     }
     
+    [Authorize]
     [HttpPost]
     [Consumes("multipart/form-data")]
     [Route("upload")]
-    public async Task<IActionResult> Upload([FromForm] UploadDto upload)
+    public async Task<IActionResult> Upload([FromForm] UploadDto upload, CancellationToken cancellationToken)
     {
         var file = upload.File;
         await using var stream = file.OpenReadStream();

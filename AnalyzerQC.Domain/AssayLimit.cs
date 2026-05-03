@@ -12,14 +12,16 @@ public class AssayLimit : FullAuditedEntity<Guid>
     public List<AssayLimitParameter> AssayLimitParameters { get; set; } = [];
     public Level Level { get; set; }
 
-    public AssayLimit()
+    private AssayLimit()
     {
         
     }
-    public AssayLimit(Guid lotId, int reagentId, Level level)
+    public AssayLimit(Guid lotId, int reagentId, Level level, string creatorId)
     {
         LotId = lotId;
         ReagentId = reagentId;
         Level = level;
+        CreatorId = creatorId;
+        CreationTime = DateTime.UtcNow;
     }
 }

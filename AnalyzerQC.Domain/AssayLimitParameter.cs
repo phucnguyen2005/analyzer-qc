@@ -19,7 +19,7 @@ public class AssayLimitParameter:FullAuditedEntity<Guid>
     {
         
     }
-    public AssayLimitParameter(float target, float lowerLimit, float upperLimit, int parameterId, Guid assayLimitId, ParameterUnit parameterUnit)
+    public AssayLimitParameter(float target, float lowerLimit, float upperLimit, int parameterId, Guid assayLimitId, ParameterUnit parameterUnit, string creatorId)
     {
         Target = target;
         LowerLimit = lowerLimit;
@@ -27,5 +27,7 @@ public class AssayLimitParameter:FullAuditedEntity<Guid>
         ParameterId = parameterId;
         AssayLimitId = assayLimitId;
         ParameterUnit = parameterUnit;
+        CreatorId = creatorId;
+        CreationTime = DateTime.UtcNow;
     }
 }

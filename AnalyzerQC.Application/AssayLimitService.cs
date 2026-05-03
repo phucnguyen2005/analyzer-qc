@@ -14,10 +14,12 @@ public interface IAssayLimitService
 public class AssayLimitService : IAssayLimitService
 {
     private readonly IAppDbContext _dbContext;
-
-    public AssayLimitService(IAppDbContext dbContext)
+    private readonly IUserContext _userContext;
+    
+    public AssayLimitService(IAppDbContext dbContext, IUserContext userContext)
     {
         _dbContext = dbContext;
+        _userContext = userContext;
     }
 
 
@@ -76,6 +78,7 @@ public class AssayLimitService : IAssayLimitService
         var assayLimitParameters = new List<AssayLimitParameter>();
         var parameters = await _dbContext.Parameters.ToListAsync();
         using var reader = new StreamReader(stream);
+        
         await reader.ReadLineAsync();
         while (await reader.ReadLineAsync() is { } line)
         {
@@ -83,7 +86,7 @@ public class AssayLimitService : IAssayLimitService
             var parameter = parameters.FirstOrDefault(p => p.ParameterCode == lineParts[0]);
             if (parameter == null)
                 continue;
-            var unitCode = lineParts[1].Split('/', StringSplitOptions.None)[1];
+            var unitCode = lineParts[1];
             var unit = parameter.ParameterUnits.FirstOrDefault(u => u.UnitCode == unitCode);
             if (unit == null)
                 continue;
@@ -91,8 +94,14 @@ public class AssayLimitService : IAssayLimitService
             var target = float.Parse(lineParts[3]);
             var upperLimit = float.Parse(lineParts[4]);
 
-            assayLimitParameters.Add(new AssayLimitParameter(target, lowerLimit, upperLimit, parameter.Id,
-                assayLimitId, unit));
+            assayLimitParameters.Add(new AssayLimitParameter(
+                target,
+                lowerLimit,
+                upperLimit,
+                parameter.Id,
+                assayLimitId,
+                unit,
+                _userContext.UserId.ToString()));
         }
 
         return assayLimitParameters;
@@ -100,7 +109,7 @@ public class AssayLimitService : IAssayLimitService
 
     private async Task<AssayLimit?> GetAssayLimitFromFile(string fileName)
     {
-        string[] parts = fileName.Split('_');
+        string[] parts = fileName.Replace(".csv", string.Empty).Split('_');
         var reagent = _dbContext.Reagents.FirstOrDefault(ra => ra.ReagentCode == parts[0]);
         if (reagent == null)
             return null;
@@ -112,14 +121,14 @@ public class AssayLimitService : IAssayLimitService
 
         if (lot == null)
         {
-            lot = new Lot(parts[2], startDate, expiryDate, true);
+            lot = new Lot(parts[2], startDate, expiryDate, true, _userContext.UserId.ToString());
             await _dbContext.Lots.AddAsync(lot); //TODO: ensure the lot is added to the database
         }
 
-        if (!Level.TryParse(parts[1], out var level))
+        if (!Level.TryParse(parts[1], out Level level))
             return null;
 
-        var assayLimit = new AssayLimit(lot.Id, reagent.Id, level);
+        var assayLimit = new AssayLimit(lot.Id, reagent.Id, level, _userContext.UserId.ToString());
         return assayLimit;
     }
 }

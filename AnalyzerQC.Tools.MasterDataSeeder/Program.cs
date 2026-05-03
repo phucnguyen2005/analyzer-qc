@@ -1,6 +1,7 @@
 using AnalyzerQC;
 using AnalyzerQC.Application.Dtos;
 using AnalyzerQC.Infrastructure.Database;
+using AnalyzerQC.ValueObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -115,7 +116,7 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
         return "Ok";
     })
     .WithName("Seed master data - Model groups and models");
-/*app.MapGet("/seed-reagents", async (AppDbContext dbContext) =>
+app.MapGet("/seed-reagents", async (AppDbContext dbContext) =>
     {
         List<ReagentCsvDto> reagentCsvDtos = [];
         using (StreamReader sr = new StreamReader("C:\\Users\\Admin\\Downloads\\reagents.csv"))
@@ -124,21 +125,44 @@ app.MapGet("/seed-groups-and-models", async (AppDbContext dbContext) =>
             while (sr.ReadLine() is { } line)
             {
                 var values = line.Split(',');
-                var levels = values[1].Split('|');
-                List<string> levelList = [];
-                foreach (var level in levels)
+                var parts = values[1].Split('|');
+                List<Level> levelList = [];
+                foreach (var part in parts)
                 {
-                    levelList.Add(level);
+                    var isLevel = Level.TryParse(part, out var level);
+                    if (isLevel)
+                    {
+                        levelList.Add(level);
+                    }
                 }
-                var isActive = values[4] == "1" ? true : false;
-                reagentCsvDtos.Add(new ReagentCsvDto(values[0], levelList, isActive, values[3]));
+
+                var modelGroups = new List<ModelGroup>();
+                var modelGroupCodes = values[2].Split('|');
+                foreach (var modelGroupCode in modelGroupCodes)
+                {
+                    var modelGroup =
+                        await dbContext.ModelGroups.FirstOrDefaultAsync(mg => mg.ModelGroupCode == modelGroupCode);
+                    if (modelGroup == null) throw new Exception("Model group code not found");
+                    modelGroups.Add(modelGroup);
+                }
+
+                var isActive = string.Compare(values[3], "true", StringComparison.OrdinalIgnoreCase) == 0;
+                reagentCsvDtos.Add(new ReagentCsvDto(values[0], levelList, isActive, modelGroups));
             }
+
+            var reagentEntities = reagentCsvDtos
+                .Select(r => new Reagent(
+                    r.ReagentName,
+                    r.ReagentName,
+                    "",
+                    r.Status,
+                    r.Levels,
+                    r.ModelGroups)).ToList();
+            await dbContext.Reagents.AddRangeAsync(reagentEntities);
+            await dbContext.SaveChangesAsync();
         }
-
-
-        return "Ok";
     })
-    .WithName("Seed master data - Reagents");*/
+    .WithName("Seed master data - Reagents");
 app.MapGet("/seed-parameters", async (AppDbContext dbContext) =>
 {
     List<ParameterCsvDto> parameterCsvDtos = [];
@@ -148,12 +172,14 @@ app.MapGet("/seed-parameters", async (AppDbContext dbContext) =>
         while (sr.ReadLine() is { } line)
         {
             var values = line.Split(',');
+            var parameterId = int.Parse(values[0]);
             var parameterCode = values[2];
             var parameterName = values[3];
-            parameterCsvDtos.Add(new ParameterCsvDto(parameterCode, parameterName));
+            parameterCsvDtos.Add(new ParameterCsvDto(parameterId, parameterCode, parameterName, []));
         }
     }
-    using (StreamReader streamReader =  new StreamReader("C:\\Users\\Admin\\Downloads\\parameter-units.csv"))
+
+    using (StreamReader streamReader = new StreamReader("C:\\Users\\Admin\\Downloads\\parameter-units.csv"))
     {
         var headerLine = streamReader.ReadLine(); // read and ignore header
         while (streamReader.ReadLine() is { } line)
@@ -163,11 +189,14 @@ app.MapGet("/seed-parameters", async (AppDbContext dbContext) =>
             var unitCode = values[2];
             var conversionFactor = float.Parse(values[5]);
             var parameter = parameterCsvDtos.FirstOrDefault(p => p.Id == parameterId);
-            if (parameter == null) throw new Exception("Parameter code not found");
-            parameter.ParameterUnits.Add(new ParameterUnitCsvDto(unitCode, conversionFactor));
+            if (parameter == null)
+                throw new Exception("Parameter code not found");
+            parameter.ParameterUnits.Add(new ParameterUnit(unitCode, conversionFactor));
         }
     }
-    var parameterEntities = parameterCsvDtos.Select(p => new Parameter(p.ParameterName, p.ParameterCode)).ToList();
+
+    var parameterEntities = parameterCsvDtos
+        .Select(p => new Parameter(p.ParameterName, p.ParameterCode, p.ParameterUnits)).ToList();
     await dbContext.Parameters.AddRangeAsync(parameterEntities);
     await dbContext.SaveChangesAsync();
 });
