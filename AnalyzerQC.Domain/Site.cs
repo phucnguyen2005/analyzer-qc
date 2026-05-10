@@ -64,5 +64,4 @@ public class Site : FullAuditedEntity<Guid>
         TimeZone = timeZone;
         Address = address;
     }
-    
 }

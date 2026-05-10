@@ -16,11 +16,13 @@ public class Reagent : CreationAuditedEntity<int>
 
     public List<Lot> Lots { get; private set; } = [];
     public List<AssayLimit> AssayLimits { get; private set; } = [];
+
     private Reagent()
     {
     }
 
-    public Reagent(string reagentName, string reagentCode, string description, bool status, List<Level> levels, List<ModelGroup> modelGroups)
+    public Reagent(string reagentName, string reagentCode, string description, bool status, List<Level> levels,
+        List<ModelGroup> modelGroups)
     {
         Levels = levels;
         ModelGroups = modelGroups;
@@ -28,7 +30,5 @@ public class Reagent : CreationAuditedEntity<int>
         ReagentCode = reagentCode;
         Description = description;
         Status = status;
-        CreatorId = "System";
-        CreationTime = DateTime.UtcNow;
     }
 }

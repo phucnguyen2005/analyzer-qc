@@ -14,7 +14,7 @@ public class Analyzer : FullAuditedEntity<Guid>
     public bool Status { get; set; }
 
 
-    public Analyzer()
+    private Analyzer()
     {
     }
 

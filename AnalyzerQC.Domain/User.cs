@@ -10,7 +10,7 @@ public class User : FullAuditedEntity<Guid>
 
     public string UserName { get; private set; }
 
-    public User()
+    private User()
     {
     }
 

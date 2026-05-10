@@ -3,22 +3,22 @@ using AnalyzerQC.ValueObject;
 
 namespace AnalyzerQC;
 
-public class Parameter:CreationAuditedEntity<int>
+public class Parameter : CreationAuditedEntity<int>
 {
     public string ParameterName { get; set; }
     public string ParameterCode { get; set; }
     public List<ParameterUnit> ParameterUnits { get; set; } = [];
     public List<AssayLimitParameter> AssayLimitParameters { get; set; } = [];
-    public Parameter()
+
+    private Parameter()
     {
     }
+
     public Parameter(string parameterName, string parameterCode, List<ParameterUnit> parameterUnits)
     {
         ParameterName = parameterName;
         ParameterCode = parameterCode;
         ParameterUnits = parameterUnits;
-        CreatorId = "System";
-        CreationTime = DateTime.UtcNow;
     }
 
     public void AddParameterUnit(ParameterUnit parameterUnit)
