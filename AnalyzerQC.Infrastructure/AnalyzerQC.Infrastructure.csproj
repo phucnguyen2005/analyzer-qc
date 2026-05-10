@@ -16,13 +16,14 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.1"/>
+        <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AnalyzerQC.Application\AnalyzerQC.Application.csproj"/>
-        <ProjectReference Include="..\AnalyzerQC.Domain\AnalyzerQC.Domain.csproj"/>
+        <ProjectReference Include="..\AnalyzerQC.Application\AnalyzerQC.Application.csproj" />
+        <ProjectReference Include="..\AnalyzerQC.Domain\AnalyzerQC.Domain.csproj" />
     </ItemGroup>
 
 </Project>

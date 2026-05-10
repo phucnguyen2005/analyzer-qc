@@ -3,7 +3,7 @@ using AnalyzerQC.ValueObject;
 
 namespace AnalyzerQC;
 
-public class AssayLimitParameter:FullAuditedEntity<Guid>
+public class AssayLimitParameter : FullAuditedEntity<Guid>
 {
     public float Target { get; set; }
     public float LowerLimit { get; set; }
@@ -11,15 +11,16 @@ public class AssayLimitParameter:FullAuditedEntity<Guid>
     public int ParameterId { get; set; }
     public Parameter Parameter { get; set; } = null!;
     public Guid AssayLimitId { get; set; }
-    
+
     public AssayLimit AssayLimit { get; set; } = null!;
     public ParameterUnit ParameterUnit;
-    
-    public AssayLimitParameter()
+
+    private AssayLimitParameter()
     {
-        
     }
-    public AssayLimitParameter(float target, float lowerLimit, float upperLimit, int parameterId, Guid assayLimitId, ParameterUnit parameterUnit, string creatorId)
+
+    public AssayLimitParameter(float target, float lowerLimit, float upperLimit, int parameterId, Guid assayLimitId,
+        ParameterUnit parameterUnit)
     {
         Target = target;
         LowerLimit = lowerLimit;
@@ -27,7 +28,5 @@ public class AssayLimitParameter:FullAuditedEntity<Guid>
         ParameterId = parameterId;
         AssayLimitId = assayLimitId;
         ParameterUnit = parameterUnit;
-        CreatorId = creatorId;
-        CreationTime = DateTime.UtcNow;
     }
 }

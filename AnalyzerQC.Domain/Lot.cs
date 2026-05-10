@@ -11,25 +11,25 @@ public class Lot : FullAuditedEntity<Guid>
     public List<Reagent> Reagents { get; set; } = [];
     public List<AssayLimit> AssayLimits { get; set; } = [];
 
-    public Lot()
+    private Lot()
     {
     }
-    
-    public Lot(string lotCode, DateTime startDate, DateTime expiryDate, bool isActive, string creatorId)
+
+    public Lot(string lotCode, DateTime startDate, DateTime expiryDate, bool isActive)
     {
-        if(lotCode.Length < 3 || lotCode.Length > 20)
+        if (lotCode.Length < 3 || lotCode.Length > 20)
         {
             throw new ArgumentException("Lot code must be between 3 and 20 characters long");
         }
+
         LotCode = lotCode;
-        if(startDate > expiryDate) 
+        if (startDate > expiryDate)
         {
             throw new ArgumentException("Start date cannot be later than expiry date");
         }
+
         StartDate = startDate;
         ExpiryDate = expiryDate;
         IsActive = isActive;
-        CreatorId = creatorId;
-        CreationTime = DateTime.UtcNow;
     }
 }

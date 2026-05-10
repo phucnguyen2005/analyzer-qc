@@ -17,7 +17,7 @@ public class Model : CreationAuditedEntity<int>
     public string ModelName { get; private set; }
     public List<Analyzer> Analyzers { get; private set; }
 
-    public Model()
+    private Model()
     {
     }
 
@@ -36,7 +36,5 @@ public class Model : CreationAuditedEntity<int>
         ModelCode = modelCode;
         ModelName = modelName;
         ModelGroupId = modelGroupId;
-        CreatorId = "System";
-        CreationTime = DateTime.UtcNow;
     }
 }

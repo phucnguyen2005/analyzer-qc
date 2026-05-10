@@ -1,6 +1,7 @@
 ﻿using AnalyzerQC.Application.Dtos;
 using AnalyzerQC.ValueObject;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace AnalyzerQC.Application;
 
@@ -14,12 +15,12 @@ public interface IAssayLimitService
 public class AssayLimitService : IAssayLimitService
 {
     private readonly IAppDbContext _dbContext;
-    private readonly IUserContext _userContext;
-    
-    public AssayLimitService(IAppDbContext dbContext, IUserContext userContext)
+    private readonly ILogger<AssayLimitService> _logger;
+
+    public AssayLimitService(IAppDbContext dbContext, ILogger<AssayLimitService> logger)
     {
         _dbContext = dbContext;
-        _userContext = userContext;
+        _logger = logger;
     }
 
 
@@ -78,18 +79,27 @@ public class AssayLimitService : IAssayLimitService
         var assayLimitParameters = new List<AssayLimitParameter>();
         var parameters = await _dbContext.Parameters.ToListAsync();
         using var reader = new StreamReader(stream);
-        
+
         await reader.ReadLineAsync();
         while (await reader.ReadLineAsync() is { } line)
         {
             var lineParts = line.Split(',');
             var parameter = parameters.FirstOrDefault(p => p.ParameterCode == lineParts[0]);
             if (parameter == null)
+            {
+                _logger.LogWarning("Parameter code {ParameterCode} not found, skipping line", lineParts[0]);
                 continue;
+            }
+
             var unitCode = lineParts[1];
             var unit = parameter.ParameterUnits.FirstOrDefault(u => u.UnitCode == unitCode);
             if (unit == null)
+            {
+                _logger.LogWarning("Unit code {UnitCode} not found for parameter {ParameterCode}, skipping line",
+                    unitCode, lineParts[0]);
                 continue;
+            }
+
             var lowerLimit = float.Parse(lineParts[2]);
             var target = float.Parse(lineParts[3]);
             var upperLimit = float.Parse(lineParts[4]);
@@ -100,10 +110,10 @@ public class AssayLimitService : IAssayLimitService
                 upperLimit,
                 parameter.Id,
                 assayLimitId,
-                unit,
-                _userContext.UserId.ToString()));
+                unit));
         }
 
+        _logger.LogInformation($"Reading {assayLimitParameters.Count} assay limit parameters");
         return assayLimitParameters;
     }
 
@@ -121,14 +131,14 @@ public class AssayLimitService : IAssayLimitService
 
         if (lot == null)
         {
-            lot = new Lot(parts[2], startDate, expiryDate, true, _userContext.UserId.ToString());
-            await _dbContext.Lots.AddAsync(lot); //TODO: ensure the lot is added to the database
+            lot = new Lot(parts[2], startDate, expiryDate, true);
+            await _dbContext.Lots.AddAsync(lot);
         }
 
         if (!Level.TryParse(parts[1], out Level level))
             return null;
 
-        var assayLimit = new AssayLimit(lot.Id, reagent.Id, level, _userContext.UserId.ToString());
+        var assayLimit = new AssayLimit(lot.Id, reagent.Id, level);
         return assayLimit;
     }
 }

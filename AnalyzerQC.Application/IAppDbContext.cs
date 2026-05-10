@@ -11,8 +11,8 @@ public interface IAppDbContext
     public DbSet<Analyzer> Analyzers { get; set; }
     public DbSet<Parameter> Parameters { get; set; }
     public DbSet<AssayLimit> AssayLimits { get; set; }
-    public DbSet<AssayLimitParameter> AssayLimitParameters { get; set; }
     public DbSet<Lot> Lots { get; set; }
     public DbSet<Reagent> Reagents { get; set; }
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    
 }

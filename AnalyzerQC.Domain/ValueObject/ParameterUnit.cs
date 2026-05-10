@@ -1,6 +1,6 @@
 ﻿namespace AnalyzerQC.ValueObject;
 
-public class ParameterUnit: Commons.ValueObject
+public class ParameterUnit : Commons.ValueObject
 {
     public string UnitCode { get; private set; }
     public float ConversionFactor { get; private set; }

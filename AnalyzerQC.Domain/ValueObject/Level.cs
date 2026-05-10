@@ -11,6 +11,7 @@ public class Level : Commons.ValueObject
         LevelCode = levelCode;
         LevelName = levelName;
     }
+
     //TODO: no magic string
     public static bool TryParse(string? input, out Level level)
     {
@@ -19,7 +20,8 @@ public class Level : Commons.ValueObject
         {
             return false;
         }
-        if(input.Equals("High"))
+
+        if (input.Equals("High"))
         {
             level = new Level("H", "High");
             return true;
@@ -36,8 +38,10 @@ public class Level : Commons.ValueObject
             level = new Level("L", "Low");
             return true;
         }
+
         return false;
     }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return LevelCode;

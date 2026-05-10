@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(x =>
@@ -25,9 +26,16 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+builder.Services.AddSerilog((services, lc) => lc
+    .ReadFrom.Configuration(builder.Configuration)
+    .ReadFrom.Services(services));
 
 builder.Services.AddEndpointsApiExplorer(); // Required for Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -50,18 +58,23 @@ builder.Services.AddSwaggerGen(c =>
         [new OpenApiSecuritySchemeReference("Bearer", document)] = []
     });
 });
-builder.Services.AddScoped<IUserContext, UserContext>();
+
 builder.Services.AddScoped<IAnalyzerService, AnalyzerService>();
 builder.Services.AddScoped<IModelGroupService, ModelGroupService>();
 builder.Services.AddScoped<IModelService, ModelService>();
 builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IAssayLimitService, AssayLimitService>();
 builder.Services.AddScoped<ILotService, LotService>();
+builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddScoped<AuditInterceptor>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+builder.Services.AddDbContext<AppDbContext>((sp, optionsBuilder) =>
 {
-    optionsBuilder.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var interceptor = sp.GetRequiredService<AuditInterceptor>();
+
+    optionsBuilder.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .AddInterceptors(interceptor);
 });
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 
@@ -77,6 +90,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 }
 
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 

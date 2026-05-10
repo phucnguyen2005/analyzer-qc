@@ -1,5 +1,9 @@
 ﻿using AnalyzerQC.Application;
+using AnalyzerQC.Commons;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 
 namespace AnalyzerQC.Infrastructure.Database;
 
