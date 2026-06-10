@@ -12,7 +12,7 @@ public class Analyzer : FullAuditedEntity<Guid>
     public Site AssignedSite { get; set; }
     public string SerialNumber { get; set; }
     public bool Status { get; set; }
-
+    public List<QcUpload> QcUpload { get; set; }
 
     private Analyzer()
     {

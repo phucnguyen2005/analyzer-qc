@@ -13,6 +13,8 @@ public interface IAppDbContext
     public DbSet<AssayLimit> AssayLimits { get; set; }
     public DbSet<Lot> Lots { get; set; }
     public DbSet<Reagent> Reagents { get; set; }
+    public DbSet<AssayLimitParameter> AssayLimitParameters { get; set; }
+    public DbSet<QcUpload> QcUploads { get; set; }
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     
 }
