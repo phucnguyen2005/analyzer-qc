@@ -31,7 +31,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -93,7 +92,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -155,7 +153,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -216,7 +213,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -277,7 +273,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -317,7 +312,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -351,7 +345,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -378,6 +371,76 @@ namespace AnalyzerQC.Infrastructure.Migrations
                     b.ToTable("parameter", (string)null);
                 });
 
+            modelBuilder.Entity("AnalyzerQC.QcUpload", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AnalyzerId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("analyzer_id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("creation_time");
+
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("DeleterId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("deleter_id");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("deletion_time");
+
+                    b.Property<string>("FileKey")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("file_key");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("file_name");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("last_modification_time");
+
+                    b.Property<string>("LastModifierId")
+                        .HasColumnType("longtext")
+                        .HasColumnName("last_modifier_id");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("time");
+
+                    b.Property<string>("UploadStatus")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("upload_status");
+
+                    b.Property<string>("UploadType")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("upload_type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnalyzerId");
+
+                    b.ToTable("qc_upload", (string)null);
+                });
+
             modelBuilder.Entity("AnalyzerQC.Reagent", b =>
                 {
                     b.Property<int>("Id")
@@ -390,7 +453,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -443,7 +505,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -525,7 +586,6 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnName("creation_time");
 
                     b.Property<string>("CreatorId")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("creator_id");
 
@@ -661,6 +721,17 @@ namespace AnalyzerQC.Infrastructure.Migrations
                     b.Navigation("ModelGroup");
                 });
 
+            modelBuilder.Entity("AnalyzerQC.QcUpload", b =>
+                {
+                    b.HasOne("AnalyzerQC.Analyzer", "Analyzer")
+                        .WithMany("QcUpload")
+                        .HasForeignKey("AnalyzerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Analyzer");
+                });
+
             modelBuilder.Entity("LotReagent", b =>
                 {
                     b.HasOne("AnalyzerQC.Lot", null)
@@ -689,6 +760,11 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasForeignKey("ReagentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AnalyzerQC.Analyzer", b =>
+                {
+                    b.Navigation("QcUpload");
                 });
 
             modelBuilder.Entity("AnalyzerQC.AssayLimit", b =>

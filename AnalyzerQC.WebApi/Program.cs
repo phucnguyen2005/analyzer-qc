@@ -1,9 +1,11 @@
 using System.Text;
+using Amazon.S3;
 using AnalyzerQC.Application;
 using AnalyzerQC.Infrastructure;
 using AnalyzerQC.Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
@@ -33,6 +35,30 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// 1. Thêm dòng này để lấy các tuỳ chọn của AwsOptions
+builder.Services.Configure<AwsOptions>(builder.Configuration.GetSection("AWS"));
+
+builder.Services.AddScoped<IAmazonS3>(sp =>
+{
+    var options = sp.GetRequiredService<IOptions<AwsOptions>>().Value;
+
+    var config = new AmazonS3Config
+    {
+        ServiceURL = options.ServiceURL,
+        ForcePathStyle = options.ForcePathStyle,
+        UseHttp = true
+    };
+
+    return new AmazonS3Client(
+        options.AccessKey,
+        options.SecretKey,
+        config);
+});
+
+
+builder.Services.AddScoped<IQcUploadService, QcUploadService>();
+
+
 builder.Services.AddSerilog((services, lc) => lc
     .ReadFrom.Configuration(builder.Configuration)
     .ReadFrom.Services(services));
@@ -59,6 +85,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddExceptionHandler<GlobalException>();
+builder.Services.AddProblemDetails(options =>
+    options.CustomizeProblemDetails = ctx =>
+        ctx.ProblemDetails.Extensions.Add("nodeId", Environment.MachineName));
 builder.Services.AddScoped<IAnalyzerService, AnalyzerService>();
 builder.Services.AddScoped<IModelGroupService, ModelGroupService>();
 builder.Services.AddScoped<IModelService, ModelService>();
@@ -90,6 +120,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 }
 
+app.UseExceptionHandler(new ExceptionHandlerOptions
+{
+    StatusCodeSelector = ex => ex is TimeoutException
+        ? StatusCodes.Status503ServiceUnavailable
+        : StatusCodes.Status500InternalServerError
+});
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();

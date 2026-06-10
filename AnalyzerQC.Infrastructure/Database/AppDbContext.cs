@@ -28,6 +28,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Lot> Lots { get; set; }
     public DbSet<Parameter> Parameters { get; set; }
     public DbSet<AssayLimitParameter> AssayLimitParameters { get; set; }
+    public DbSet<QcUpload> QcUploads { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
