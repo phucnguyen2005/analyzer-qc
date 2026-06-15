@@ -3,6 +3,7 @@ using System;
 using AnalyzerQC.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnalyzerQC.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260524074522_Upload")]
+    partial class Upload
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -398,15 +401,15 @@ namespace AnalyzerQC.Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("deletion_time");
 
-                    b.Property<string>("FileKey")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("file_key");
-
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("file_name");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("file_url");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)")
